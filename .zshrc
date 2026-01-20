@@ -167,6 +167,7 @@ ZSHCONFIG="$ZSHRC_DIR/config"
 # Load OS-specific configurations
 if [[ "$IS_MAC" == "true" ]]; then
     [[ -f "$ZSHCONFIG/macos.zsh" ]] && source "$ZSHCONFIG/macos.zsh"
+    [[ -f "$ZSHCONFIG/macos.zsh.local" ]] && source "$ZSHCONFIG/macos.zsh.local"
 else
     [[ -f "$ZSHCONFIG/linux.zsh" ]] && source "$ZSHCONFIG/linux.zsh"
 fi
