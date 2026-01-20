@@ -183,15 +183,6 @@ alias www='cd ~/www'
 alias desktop='cd ~/Desktop'
 alias downloads='cd ~/Downloads'
 alias documents='cd ~/Documents'
-alias cashback='cd ~/Git/msmg-private/cashback'
-alias qplatform='cd ~/Git/msmg-private/cashback/qplatform'
-alias customer='cd ~/Git/msmg-private/customer'
-alias platform='cd ~/Git/msmg-private/platform'
-alias msmgPrivate='cd ~/Git/msmg-private/'
-alias msmgExternal='cd ~/Git/msmg-external/'
-alias msmgSandbox='cd ~/Git/msmg-sandbox/'
-alias tools='cd ~/Git/msmg-private/cashback/cashback-quidco-tools'
-alias localdev='cd ~/Git/msmg-private/cashback/cashback-quidco-local-dev'
 
 # Android Studio (OS-specific)
 if [[ "$IS_LINUX" == "true" ]] && [[ -f "/snap/bin/android-studio" ]]; then

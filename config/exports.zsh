@@ -22,7 +22,6 @@ export COMPOSE_HTTP_TIMEOUT=120
 export NVM_DIR="$HOME/.nvm"
 
 # Quidco CLI
-export INFRA_PATH="$HOME/Git/msmg-private/cashback/quidco-legacy-infrastructure"
 
 # Path additions
 path+=(
@@ -62,18 +61,6 @@ export SDKMAN_DIR="$HOME/.sdkman"
 if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
     source "$HOME/.sdkman/bin/sdkman-init.sh" 2>/dev/null || echo "⚠️  SDKMAN initialization failed (non-critical)"
 fi
-
-# Certificate setup - only when needed
-setup_certs() {
-  export CERT_DIR="/Users/$USER/.ca_certs"
-  export CERT_PATH="$CERT_DIR/cert.pem"
-  export NODE_EXTRA_CA_CERTS="$CERT_DIR/ZscalerRootCertificate-2048-SHA256.crt"
-  export SSL_CERT_FILE="$CERT_PATH"
-  export SSL_CERT_DIR="$CERT_DIR/"
-  export REQUESTS_CA_BUNDLE="$CERT_PATH"
-  export AWS_CA_BUNDLE="$CERT_DIR/cert.pem"
-}
-[ -d "/Users/$USER/.ca_certs" ] && setup_certs
 
 # Terminal-specific configurations
 if [[ "$TERM_PROGRAM" == "WarpTerminal" ]]; then

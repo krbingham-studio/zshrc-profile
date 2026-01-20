@@ -164,6 +164,13 @@ ZSHCONFIG="$ZSHRC_DIR/config"
 [[ -f "$ZSHCONFIG/functions.zsh" ]] && source "$ZSHCONFIG/functions.zsh"
 [[ -f "$ZSHCONFIG/git.zsh" ]] && source "$ZSHCONFIG/git.zsh"
 
+# Load OS-specific configurations
+if [[ "$IS_MAC" == "true" ]]; then
+    [[ -f "$ZSHCONFIG/macos.zsh" ]] && source "$ZSHCONFIG/macos.zsh"
+else
+    [[ -f "$ZSHCONFIG/linux.zsh" ]] && source "$ZSHCONFIG/linux.zsh"
+fi
+
 # Load secrets from separate file (tokens, API keys, etc.)
 [[ -f "$HOME/.zsh_secrets" ]] && source "$HOME/.zsh_secrets"
 

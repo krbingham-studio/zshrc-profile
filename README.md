@@ -22,7 +22,9 @@ zshrc-profile/
     ├── aliases.zsh     # Command aliases and shortcuts
     ├── exports.zsh     # Environment variables and PATH
     ├── functions.zsh   # Custom shell functions
-    └── git.zsh         # Git-specific aliases and functions
+    ├── git.zsh         # Git-specific aliases and functions
+    ├── macos.zsh       # macOS-specific configuration (work stuff)
+    └── linux.zsh       # Linux/WSL2-specific configuration
 ```
 
 ## 🛠️ Prerequisites

@@ -1,0 +1,7 @@
+# Optional OS-specific configurations
+# These can be customized per machine and won't be tracked
+config/macos.zsh.local
+config/linux.zsh.local
+
+# Secrets (already being loaded from ~/.zsh_secrets)
+.zsh_secrets
