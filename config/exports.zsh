@@ -1,0 +1,86 @@
+# ============================================
+# Environment Variables & Path Configuration
+# ============================================
+
+# Core Environment
+export KUBECONFIG="${HOME}/.kube/config"
+export HOST_FILE=/etc/hosts
+
+# Programming Languages & Tools
+export JAVA_HOME="/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home"
+export GRADLE_OPTS="-Djavax.net.ssl.trustStore='$JAVA_HOME/lib/security/cacerts' -Djavax.net.ssl.trustAnchors='$JAVA_HOME/lib/security/cacerts' -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=pkcs12"
+
+# .NET
+export PATH="/opt/homebrew/opt/dotnet@8/bin:$PATH"
+export PATH="$PATH:$HOME/.dotnet/tools"
+
+# Docker environment
+export DOCKER_CLIENT_TIMEOUT=120
+export COMPOSE_HTTP_TIMEOUT=120
+
+# NVM
+export NVM_DIR="$HOME/.nvm"
+
+# Quidco CLI
+export INFRA_PATH="$HOME/Git/msmg-private/cashback/quidco-legacy-infrastructure"
+
+# Path additions
+path+=(
+  "$HOME/Library/Python/3.9/bin"
+  "$HOME/Git/apache-maven-3.8.6"
+  "$HOME/.composer/vendor/bin"
+  "/opt/homebrew/bin"
+  "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
+)
+export PATH
+
+# Android SDK configuration (OS-specific)
+if [[ "$IS_LINUX" == "true" ]]; then
+    if [[ -d "$HOME/Android/Sdk" ]]; then
+        export ANDROID_HOME=$HOME/Android/Sdk
+        if [[ ":$PATH:" != *":$ANDROID_HOME/cmdline-tools/latest/bin:"* ]]; then
+            export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+        fi
+        if [[ ":$PATH:" != *":$ANDROID_HOME/platform-tools:"* ]]; then
+            export PATH=$PATH:$ANDROID_HOME/platform-tools
+        fi
+    fi
+elif [[ "$IS_MAC" == "true" ]]; then
+    if [[ -d "$HOME/Library/Android/sdk" ]]; then
+        export ANDROID_HOME=$HOME/Library/Android/sdk
+        if [[ ":$PATH:" != *":$ANDROID_HOME/cmdline-tools/latest/bin:"* ]]; then
+            export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+        fi
+        if [[ ":$PATH:" != *":$ANDROID_HOME/platform-tools:"* ]]; then
+            export PATH=$PATH:$ANDROID_HOME/platform-tools
+        fi
+    fi
+fi
+
+# SDKMAN (must be at end)
+export SDKMAN_DIR="$HOME/.sdkman"
+if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
+    source "$HOME/.sdkman/bin/sdkman-init.sh" 2>/dev/null || echo "⚠️  SDKMAN initialization failed (non-critical)"
+fi
+
+# Certificate setup - only when needed
+setup_certs() {
+  export CERT_DIR="/Users/$USER/.ca_certs"
+  export CERT_PATH="$CERT_DIR/cert.pem"
+  export NODE_EXTRA_CA_CERTS="$CERT_DIR/ZscalerRootCertificate-2048-SHA256.crt"
+  export SSL_CERT_FILE="$CERT_PATH"
+  export SSL_CERT_DIR="$CERT_DIR/"
+  export REQUESTS_CA_BUNDLE="$CERT_PATH"
+  export AWS_CA_BUNDLE="$CERT_DIR/cert.pem"
+}
+[ -d "/Users/$USER/.ca_certs" ] && setup_certs
+
+# Terminal-specific configurations
+if [[ "$TERM_PROGRAM" == "WarpTerminal" ]]; then
+    export WARP_IS_LOCAL_SHELL_SESSION="1"
+    unset ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE
+    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=""
+fi
+
+# VS Code shell integration
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
