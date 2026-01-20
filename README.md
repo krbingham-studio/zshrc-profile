@@ -70,24 +70,24 @@ brew install nvm git-delta fzf
 3. **Create a minimal local `.zshrc`**
    ```bash
    cat > ~/.zshrc << 'EOF'
-# ============================================
-# ZSH Configuration - Git Repo Sourced
-# ============================================
-# This file sources the main configuration from the Git repository
-# allowing the same config to be used across multiple machines.
-#
-# Git Repository: ~/Git/zshrc-profile
-# To update: cd ~/Git/zshrc-profile && git pull
-# ============================================
-
-# Source the main configuration from Git repo
-if [[ -f "$HOME/Git/zshrc-profile/.zshrc" ]]; then
-    source "$HOME/Git/zshrc-profile/.zshrc"
-else
-    echo "⚠️  Warning: zshrc Git repository not found at ~/Git/zshrc-profile"
-    echo "Clone it with: git clone <your-repo-url> ~/Git/zshrc-profile"
-fi
-EOF
+    # ============================================
+    # ZSH Configuration - Git Repo Sourced
+    # ============================================
+    # This file sources the main configuration from the Git repository
+    # allowing the same config to be used across multiple machines.
+    #
+    # Git Repository: ~/Git/zshrc-profile
+    # To update: cd ~/Git/zshrc-profile && git pull
+    # ============================================
+    
+    # Source the main configuration from Git repo
+    if [[ -f "$HOME/Git/zshrc-profile/.zshrc" ]]; then
+        source "$HOME/Git/zshrc-profile/.zshrc"
+    else
+        echo "⚠️  Warning: zshrc Git repository not found at ~/Git/zshrc-profile"
+        echo "Clone it with: git clone <your-repo-url> ~/Git/zshrc-profile"
+    fi
+    EOF
    ```
 
 4. **Create a `.zsh_secrets` file for private data** (optional)
@@ -232,6 +232,29 @@ Make sure the config files are readable:
 ```bash
 chmod 644 ~/Git/zshrc-profile/.zshrc
 chmod 644 ~/Git/zshrc-profile/config/*.zsh
+```
+
+### Local .zshrc
+Update your local .zshrc to
+
+```bash
+# ============================================
+# ZSH Configuration - Git Repo Sourced
+# ============================================
+# This file sources the main configuration from the Git repository
+# allowing the same config to be used across multiple machines.
+#
+# Git Repository: ~/Git/zshrc-profile
+# To update: cd ~/Git/zshrc-profile && git pull
+# ============================================
+
+# Source the main configuration from Git repo
+if [[ -f "$HOME/Git/zshrc-profile/.zshrc" ]]; then
+    source "$HOME/Git/zshrc-profile/.zshrc"
+else
+    echo "⚠️  Warning: zshrc Git repository not found at ~/Git/zshrc-profile"
+    echo "Clone it with: git clone <your-repo-url> ~/Git/zshrc-profile"
+fi
 ```
 
 ## 📚 Learn More
