@@ -11,6 +11,7 @@ alias msmgExternal='cd ~/Git/msmg-external/'
 alias msmgSandbox='cd ~/Git/msmg-sandbox/'
 alias tools='cd ~/Git/msmg-private/cashback/cashback-quidco-tools'
 alias localdev='cd ~/Git/msmg-private/cashback/cashback-quidco-local-dev'
+alias dockerNetwork='docker network create auto'
 
 export INFRA_PATH="$HOME/Git/msmg-private/cashback/quidco-legacy-infrastructure"
 
