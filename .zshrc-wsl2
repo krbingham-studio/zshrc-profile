@@ -1,0 +1,270 @@
+# ============================================
+# ZSH Configuration with Starship
+# ============================================
+
+# Homebrew (must be early so starship command is available)
+if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
+# Enable Starship prompt
+eval "$(starship init zsh)"
+
+# Enable zoxide (smart cd)
+eval "$(zoxide init zsh)"
+
+# Zsh options for better experience
+setopt AUTO_CD              # cd by just typing directory name
+setopt HIST_VERIFY          # show command with history expansion before running
+setopt SHARE_HISTORY        # share command history data
+setopt HIST_IGNORE_SPACE    # ignore commands that start with space
+setopt HIST_IGNORE_DUPS     # ignore duplicate commands
+setopt CORRECT              # command auto-correction
+setopt COMPLETE_ALIASES     # autocompletion for aliases
+
+# History configuration
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE=~/.zsh_history
+
+# Zsh completions
+if type brew &>/dev/null; then  
+  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+  autoload -Uz compinit
+  compinit
+fi
+
+# Load zsh plugins
+source /home/linuxbrew/.linuxbrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# Conditionally load syntax highlighting only if not in Warp terminal
+if [[ "$TERM_PROGRAM" != "WarpTerminal" ]]; then
+    source /home/linuxbrew/.linuxbrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+source /home/linuxbrew/.linuxbrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+# Plugin configurations
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#666666"
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+
+# History substring search configuration
+bindkey '^[[A' history-substring-search-up      # Up arrow
+bindkey '^[[B' history-substring-search-down    # Down arrow
+bindkey '^P' history-substring-search-up        # Ctrl+P
+bindkey '^N' history-substring-search-down      # Ctrl+N
+
+# Modern zsh features
+autoload -U colors && colors           # enable colors
+setopt EXTENDED_GLOB                    # extended globbing
+setopt NO_CASE_GLOB                     # case insensitive globbing
+setopt NUMERIC_GLOB_SORT               # sort numeric filenames numerically
+setopt MENU_COMPLETE                    # autoselect the first completion entry
+setopt AUTO_LIST                        # automatically list choices on ambiguous completion
+
+# Better history search
+autoload -U up-line-or-beginning-search
+autoload -U down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey "^[[A" up-line-or-beginning-search    # Up arrow
+bindkey "^[[B" down-line-or-beginning-search  # Down arrow
+
+# Additional key bindings
+bindkey "^[[1;5C" forward-word              # Ctrl+Right arrow
+bindkey "^[[1;5D" backward-word             # Ctrl+Left arrow
+bindkey "^[[3~" delete-char                 # Delete key
+bindkey "^[[H" beginning-of-line            # Home key
+bindkey "^[[F" end-of-line                  # End key
+
+# NVM configuration
+export NVM_DIR="$HOME/.nvm"
+[ -s "/home/linuxbrew/.linuxbrew/opt/nvm/nvm.sh" ] && \. "/home/linuxbrew/.linuxbrew/opt/nvm/nvm.sh"
+[ -s "/home/linuxbrew/.linuxbrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/home/linuxbrew/.linuxbrew/opt/nvm/etc/bash_completion.d/nvm"
+
+# ============================================
+# Aliases
+# ============================================
+
+# General aliases
+alias update='sudo apt update && sudo apt upgrade -y && brew update && brew upgrade'
+
+# Modern ls alternatives (eza)
+alias ls='eza --color=auto --group-directories-first'
+alias ll='eza -alF --color=auto --group-directories-first --git'
+alias la='eza -a --color=auto --group-directories-first'
+alias l='eza -F --color=auto --group-directories-first'
+alias tree='eza --tree --color=auto'
+
+# Traditional ls fallbacks (if you need them)
+alias lls='/bin/ls -alF'
+alias lla='/bin/ls -A'
+
+# Navigation
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias z='zoxide'              # Smart cd
+alias zi='zoxide query -i'    # Interactive zoxide
+
+# Modern alternatives
+alias cat='bat --style=auto'         # bat with syntax highlighting
+alias ff='fd'                        # modern find (use 'ff' to avoid conflicts)
+alias grep='rg'                      # ripgrep (faster grep)
+
+# Utility
+alias c='clear'
+alias h='history'
+alias reload='source ~/.zshrc'
+alias src='source ~/.zshrc'              # Quick reload
+alias zshconfig='nano ~/.zshrc'
+alias starshipconfig='nano ~/.config/starship.toml'
+
+# Git aliases
+alias gs='git status'
+alias ga='git add'
+alias gaa='git add --all'
+alias gc='git commit'
+alias gcm='git commit -m'
+alias gp='git push'
+alias gpom='git push origin main'
+alias gl='git pull'
+alias glg='git log --stat'
+alias gd='git diff'
+alias gco='git checkout'
+alias gcb='git checkout -b'
+alias gb='git branch'
+alias glog='git log --oneline --decorate --graph'
+alias grh='git reset --hard'
+alias grm='git rebase main'
+
+# Git GUI tool aliases
+alias gitup='open -a GitUp'
+
+# NVM aliases
+alias nvml='nvm list'
+alias nvmls='nvm list-remote'
+alias nvmu='nvm use'
+alias nvmi='nvm install'
+alias nvmun='nvm uninstall'
+alias nvms='nvm alias default'
+alias nvml16='nvm use 16'
+alias nvml18='nvm use 18'
+alias nvml20='nvm use 20'
+
+# Node/NPM aliases
+alias ni='npm install'
+alias nid='npm install --save-dev'
+alias nig='npm install -g'
+alias ns='npm start'
+alias nt='npm test'
+alias nr='npm run'
+alias nrb='npm run build'
+alias nrd='npm run dev'
+alias yi='yarn install'
+alias ys='yarn start'
+alias yt='yarn test'
+alias ya='yarn add'
+alias yad='yarn add --dev'
+
+# PHP & Composer aliases
+alias phpserve='php -S localhost:8000'
+alias ci='composer install'
+alias cu='composer update'
+alias cr='composer require'
+alias cda='composer dump-autoload'
+
+# Docker aliases
+alias dps='docker ps'
+alias dpa='docker ps -a'
+alias di='docker images'
+alias dcu='docker-compose up -d'
+alias dcd='docker-compose down'
+alias dce='docker-compose exec'
+alias dcl='docker-compose logs -f'
+alias dsp='docker system prune -a'
+
+# MySQL aliases
+alias mysqlstart='brew services start mysql'
+alias mysqlstop='brew services stop mysql'
+alias mysqlrestart='brew services restart mysql'
+
+# Tilt aliases
+alias tup='tilt up'
+alias tdown='tilt down'
+alias ts='tilt status'
+
+# Starship aliases
+alias starship-update='starship update'
+alias starship-config='starship config'
+alias starship-explain='starship explain'
+
+# Development shortcuts
+alias weather='curl wttr.in'
+alias myip='curl ifconfig.me'
+alias ports='lsof -i -P -n | grep LISTEN'
+alias diskusage='du -sh * | sort -hr'
+alias processes='ps aux | grep -v grep | grep'
+
+# GitHub CLI aliases
+alias ghs='gh status'
+alias ghr='gh repo'
+alias ghi='gh issue'
+alias ghpr='gh pr'
+alias ghw='gh workflow'
+
+# Project shortcuts
+alias www='cd ~/www'
+
+# Create www directory if it doesn't exist
+[ ! -d "$HOME/www" ] && mkdir -p "$HOME/www"
+
+# ============================================
+# Terminal-specific configurations
+# ============================================
+
+# Warp terminal optimizations
+if [[ "$TERM_PROGRAM" == "WarpTerminal" ]]; then
+    # Disable some features that might conflict with Warp
+    export WARP_IS_LOCAL_SHELL_SESSION="1"
+    # Reduce command validation conflicts
+    unset ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE
+    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=""
+fi
+
+# ============================================
+# Environment & Welcome
+# ============================================
+
+# Load secrets from separate file (tokens, API keys, etc.)
+if [ -f "$HOME/.zsh_secrets" ]; then
+    source "$HOME/.zsh_secrets"
+fi
+
+# Welcome message
+echo "==========================================";
+echo " 🚀 Welcome to your WSL2 development environment!";
+echo " ⚡ Powered by Starship prompt";
+echo " 📝 Type 'zshconfig' to edit ZSH config";
+echo " 🎨 Type 'starshipconfig' to edit Starship";
+echo " 🔄 Type 'update' to update system & Homebrew";
+echo "==========================================";
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+# Check if SDKMAN exists and source it (suppress errors)
+if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
+    source "$HOME/.sdkman/bin/sdkman-init.sh" 2>/dev/null || echo "⚠️  SDKMAN initialization failed (non-critical)"
+fi
+# Android SDK configuration
+export ANDROID_HOME=/home/kbingham/Android/Sdk
+# Only add to PATH if not already present
+if [[ ":$PATH:" != *":$ANDROID_HOME/cmdline-tools/latest/bin:"* ]]; then
+    export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+fi
+if [[ ":$PATH:" != *":$ANDROID_HOME/platform-tools:"* ]]; then
+    export PATH=$PATH:$ANDROID_HOME/platform-tools
+fi
+
+alias studio="/snap/bin/android-studio > /dev/null 2>&1 &"
+alias studio.="/snap/bin/android-studio . > /dev/null 2>&1 &"
+
+PROMPT="${PROMPT}"$'\n'
