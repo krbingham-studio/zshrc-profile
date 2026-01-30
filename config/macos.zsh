@@ -26,3 +26,5 @@ setup_certs() {
   export AWS_CA_BUNDLE="$CERT_DIR/cert.pem"
 }
 [ -d "/Users/$USER/.ca_certs" ] && setup_certs
+
+export PNPM_HOME="$HOME/Library/pnpm"

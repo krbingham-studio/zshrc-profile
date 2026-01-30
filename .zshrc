@@ -189,6 +189,16 @@ fi
 # VS Code shell integration
 [[ "$TERM_PROGRAM" == "vscode" ]] && command -v code &>/dev/null && . "$(code --locate-shell-integration-path zsh)" 2>/dev/null
 
+# Add newline to prompt
+PROMPT="${PROMPT}"$'\n'
+
+# pnpm
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
 # ============================================
 # Welcome Message
 # ============================================
@@ -210,6 +220,3 @@ else
     echo " 🔄 Type 'update' to update Homebrew"
     echo "=========================================="
 fi
-
-# Add newline to prompt
-PROMPT="${PROMPT}"$'\n'

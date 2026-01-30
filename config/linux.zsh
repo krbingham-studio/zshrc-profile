@@ -4,3 +4,4 @@
 # Add Linux-specific aliases or configurations here
 # Example:
 # alias open='xdg-open'
+export PNPM_HOME="$HOME/.local/share/pnpm"
