@@ -216,7 +216,7 @@ netdebug() {
     cat /etc/resolv.conf | grep nameserver | awk '{print $2}'
   fi
   echo "\n=== Active Connections ==="
-  netstat -an | grep ESTABLISHED | wc -l | xargs echo "Established connections:"
+  echo "Established connections: $(netstat -an | grep -c ESTABLISHED)"
   echo "\n=== Listening Ports ==="
   lsof -i -P -n | grep LISTEN | head -10
 }
