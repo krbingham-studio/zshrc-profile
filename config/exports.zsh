@@ -7,11 +7,10 @@ export KUBECONFIG="${HOME}/.kube/config"
 export HOST_FILE=/etc/hosts
 
 # Programming Languages & Tools
-export JAVA_HOME="/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home"
-export GRADLE_OPTS="-Djavax.net.ssl.trustStore='$JAVA_HOME/lib/security/cacerts' -Djavax.net.ssl.trustAnchors='$JAVA_HOME/lib/security/cacerts' -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=pkcs12"
+export JAVA_HOME="$BREW_PREFIX/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"
 
 # .NET
-export PATH="/opt/homebrew/opt/dotnet@8/bin:$PATH"
+export PATH="$BREW_PREFIX/opt/dotnet@8/bin:$PATH"
 export PATH="$PATH:$HOME/.dotnet/tools"
 
 # Docker environment
@@ -28,7 +27,7 @@ path+=(
   "$HOME/Library/Python/3.9/bin"
   "$HOME/Git/apache-maven-3.8.6"
   "$HOME/.composer/vendor/bin"
-  "/opt/homebrew/bin"
+  "$BREW_PREFIX/bin"
   "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
 )
 export PATH

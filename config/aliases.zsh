@@ -55,7 +55,7 @@ alias grh='git reset --hard'
 alias grm='git rebase main'
 
 # Git tools
-alias gup='/opt/homebrew/bin/gitup'  # gitup CLI (brew)
+alias gup='$BREW_PREFIX/bin/gitup'  # gitup CLI (brew)
 alias gitup-gui='open -a GitUp'      # GitUp GUI app
 
 # NVM
@@ -109,10 +109,12 @@ alias dstop='docker stop $(docker ps -q)'
 alias dclean='docker system prune -af'
 alias qcc="pushd \$HOME/git/tools; docker compose exec memcached bash -c \"echo flush_all > /dev/tcp/127.0.0.1/11211\"; popd"
 
-# MySQL
-alias mysqlstart='brew services start mysql'
-alias mysqlstop='brew services stop mysql'
-alias mysqlrestart='brew services restart mysql'
+# MySQL (only if brew is available)
+if command -v brew &>/dev/null; then
+  alias mysqlstart='brew services start mysql'
+  alias mysqlstop='brew services stop mysql'
+  alias mysqlrestart='brew services restart mysql'
+fi
 
 # Tilt
 alias tup='tilt up'

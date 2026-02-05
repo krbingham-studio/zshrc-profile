@@ -1,6 +1,13 @@
 # macOS-specific configuration
 # This file is only loaded on macOS systems
 
+# Homebrew location for macOS
+if [[ -d "/opt/homebrew" ]]; then
+  export BREW_PREFIX="/opt/homebrew"  # Apple Silicon
+elif [[ -d "/usr/local" ]]; then
+  export BREW_PREFIX="/usr/local"     # Intel Mac
+fi
+
 # Work-specific aliases (MSMG)
 alias cashback='cd ~/Git/msmg-private/cashback'
 alias qplatform='cd ~/Git/msmg-private/cashback/qplatform'

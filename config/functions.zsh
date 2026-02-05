@@ -3,8 +3,12 @@
 # ============================================
 
 # Create directory and cd into it
-mkcd() { 
-  mkdir -p "$1" && cd "$1" 
+mkcd() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: mkcd <directory>"
+    return 1
+  fi
+  mkdir -p "$1" && cd "$1" || return 1
 }
 
 # Extract various archive formats
@@ -58,8 +62,8 @@ backup() {
 }
 
 # Show directory sizes sorted
-dirsize() { 
-  du -sh * | sort -hr 
+dirsize() {
+  du -sh * | sort -hr
 }
 
 # Find files containing pattern
@@ -77,7 +81,7 @@ gclone() {
     echo "Usage: gclone <git_url>"
     return 1
   fi
-  git clone "$1" && cd "$(basename "$1" .git)"
+  git clone "$1" && cd "$(basename "$1" .git)" || return 1
 }
 
 # Start simple HTTP server
@@ -105,9 +109,9 @@ newproject() {
     echo "Types: node, php, dotnet, python"
     return 1
   fi
-  
-  mkdir -p "$1" && cd "$1"
-  
+
+  mkdir -p "$1" && cd "$1" || return 1
+
   case "${2:-node}" in
     node)
       npm init -y
@@ -162,10 +166,10 @@ if command -v fzf >/dev/null 2>&1; then
     local file
     file=$(fzf --preview 'bat --color=always {}' --preview-window=right:60%) && ${EDITOR:-code} "$file"
   }
-  
+
   # Find and cd to directory
   fcd() {
     local dir
-    dir=$(find . -type d -not -path '*/.*' | fzf) && cd "$dir"
+    dir=$(find . -type d -not -path '*/.*' | fzf) && cd "$dir" || return 1
   }
 fi

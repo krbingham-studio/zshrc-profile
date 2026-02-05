@@ -1,0 +1,23 @@
+# ShellCheck configuration file
+# https://github.com/koalaman/shellcheck/wiki/Directive
+
+# Target zsh shell
+shell=bash
+
+# Allow using source with non-constant paths
+disable=SC1090
+
+# Allow using source without checking if file exists
+disable=SC1091
+
+# Allow expressions that don't expand in single quotes
+disable=SC2016
+
+# Allow echo to be used without printf (zsh handles escape sequences)
+disable=SC2028
+
+# ZSH array syntax is different
+disable=SC2048
+
+# Tips depend on target shell - we're using zsh
+disable=SC2148
