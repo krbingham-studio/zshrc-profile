@@ -2,6 +2,11 @@
 # Aliases
 # ============================================
 
+# Safety aliases - prompt before overwriting
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+
 # General system
 if [[ "$IS_MAC" == "true" ]]; then
   alias update='brew update && brew upgrade && brew cleanup'
@@ -36,6 +41,14 @@ alias src='source ~/.zshrc'
 alias zshconfig='nano ~/.zshrc'
 alias starshipconfig='nano ~/.config/starship.toml'
 
+# JSON/YAML formatters and validators
+alias jsonf='python3 -m json.tool'
+alias jsonp='jq .'
+alias jsonc='jq -c .'
+alias yamlf='python3 -c "import sys, yaml, json; print(yaml.dump(json.loads(sys.stdin.read()), default_flow_style=False))"'
+alias yamltojson='python3 -c "import sys, yaml, json; print(json.dumps(yaml.safe_load(sys.stdin.read()), indent=2))"'
+alias jsontoyaml='python3 -c "import sys, yaml, json; print(yaml.dump(json.loads(sys.stdin.read()), default_flow_style=False))"'
+
 # Git aliases
 alias gs='git status'
 alias ga='git add'
@@ -53,6 +66,15 @@ alias gb='git branch'
 alias glog='git log --oneline --decorate --graph'
 alias grh='git reset --hard'
 alias grm='git rebase main'
+
+# Git stash shortcuts
+alias gst='git stash'
+alias gsta='git stash apply'
+alias gstl='git-stash-list'
+alias gsts='git-stash-save'
+alias gstsh='git-stash-show'
+alias gstd='git-stash-drop'
+alias gstp='git stash pop'
 
 # Git tools
 alias gup='$BREW_PREFIX/bin/gitup' # gitup CLI (brew)
@@ -100,13 +122,20 @@ alias dc='docker compose'
 alias dps='docker ps'
 alias dpa='docker ps -a'
 alias di='docker images'
-alias dcu='docker-compose up -d'
-alias dcd='docker-compose down'
-alias dce='docker-compose exec'
-alias dcl='docker-compose logs -f'
+alias dcu='docker compose up'
+alias dcud='docker compose up -d'
+alias dcd='docker compose down'
+alias dce='docker compose exec'
+alias dcl='docker compose logs -f'
+alias dcr='docker compose restart'
 alias dsp='docker system prune -a'
 alias dstop='docker stop $(docker ps -q)'
 alias dclean='docker system prune -af'
+alias dex='docker exec -it'
+alias dlogs='docker logs -f'
+alias dins='docker inspect'
+alias dnet='docker network ls'
+alias dvol='docker volume ls'
 alias qcc="pushd \$HOME/git/tools; docker compose exec memcached bash -c \"echo flush_all > /dev/tcp/127.0.0.1/11211\"; popd"
 
 # MySQL (only if brew is available)

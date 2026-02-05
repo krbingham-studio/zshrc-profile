@@ -136,3 +136,41 @@ git-status-all() {
 
   cd "$OLDPWD"
 }
+
+# Git stash helpers
+git-stash-save() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: git-stash-save <description>"
+    return 1
+  fi
+  git stash push -m "$1"
+}
+
+git-stash-list() {
+  git stash list --pretty=format:'%C(yellow)%gd%C(reset) - %C(green)%cr%C(reset) - %s'
+}
+
+git-stash-show() {
+  if [[ -z "$1" ]]; then
+    git stash show -p stash@{0}
+  else
+    git stash show -p "stash@{$1}"
+  fi
+}
+
+git-stash-apply() {
+  if [[ -z "$1" ]]; then
+    git stash apply stash@{0}
+  else
+    git stash apply "stash@{$1}"
+  fi
+}
+
+git-stash-drop() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: git-stash-drop <stash_number>"
+    echo "Example: git-stash-drop 0"
+    return 1
+  fi
+  git stash drop "stash@{$1}"
+}
