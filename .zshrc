@@ -73,11 +73,12 @@ setopt AUTO_LIST            # automatically list choices on ambiguous completion
 # ============================================
 
 # Zsh completions with caching for faster startup
-if type brew &>/dev/null; then  
+if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
   autoload -Uz compinit
-  
+
   # Only regenerate .zcompdump once per day for better performance
+  # shellcheck disable=SC1009,SC1073,SC1036,SC1072
   if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
     compinit
   else
@@ -92,25 +93,21 @@ autoload -U colors && colors
 # Zsh Plugins
 # ============================================
 
-# Cache brew prefix to avoid multiple subprocess calls
-if type brew &>/dev/null && [[ -z "$BREW_PREFIX" ]]; then
-    BREW_PREFIX=$(brew --prefix)
-fi
-
+# Use BREW_PREFIX from shellenv (already set by brew shellenv above)
 if [[ -n "$BREW_PREFIX" ]]; then
-    
+
     # zsh-autosuggestions
     if [[ -f "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
         source "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
         ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#666666"
         ZSH_AUTOSUGGEST_STRATEGY=(history completion)
     fi
-    
+
     # zsh-syntax-highlighting (not in Warp terminal)
     if [[ "$TERM_PROGRAM" != "WarpTerminal" ]] && [[ -f "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
         source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
     fi
-    
+
     # zsh-history-substring-search
     if [[ -f "$BREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh" ]]; then
         source "$BREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
@@ -207,16 +204,59 @@ if [[ "$IS_LINUX" == "true" ]]; then
     echo "=========================================="
     echo " 🚀 Welcome to your WSL2 development environment!"
     echo " ⚡ Powered by Starship prompt"
-    echo " 📝 Type 'zshconfig' to edit ZSH config"
-    echo " 🎨 Type 'starshipconfig' to edit Starship"
-    echo " 🔄 Type 'update' to update system & Homebrew"
     echo "=========================================="
 else
     echo "=========================================="
     echo " 🚀 Welcome to your macOS development environment!"
     echo " ⚡ Powered by Starship prompt"
-    echo " 📝 Type 'zshconfig' to edit ZSH config"
-    echo " 🎨 Type 'starshipconfig' to edit Starship"
-    echo " 🔄 Type 'update' to update Homebrew"
     echo "=========================================="
 fi
+
+# Display development tool versions
+echo ""
+echo " 🛠️  Development Tools:"
+[[ -n "$(command -v node)" ]] && echo "    Node.js: $(node --version 2>/dev/null)"
+[[ -n "$(command -v npm)" ]] && echo "    npm: $(npm --version 2>/dev/null)"
+[[ -n "$(command -v pnpm)" ]] && echo "    pnpm: $(pnpm --version 2>/dev/null)"
+[[ -n "$(command -v yarn)" ]] && echo "    Yarn: $(yarn --version 2>/dev/null)"
+[[ -n "$(command -v python3)" ]] && echo "    Python: $(python3 --version 2>/dev/null | cut -d' ' -f2)"
+[[ -n "$(command -v php)" ]] && echo "    PHP: $(php --version 2>/dev/null | head -n1 | awk '{print $2}')"
+[[ -n "$(command -v dotnet)" ]] && echo "    .NET: $(dotnet --version 2>/dev/null)"
+[[ -n "$(command -v go)" ]] && echo "    Go: $(go version 2>/dev/null | awk '{print $3}')"
+[[ -n "$(command -v java)" ]] && echo "    Java: $(java --version 2>/dev/null | head -n1 | awk '{print $2}')"
+[[ -n "$(command -v docker)" ]] && echo "    Docker: $(docker --version 2>/dev/null | cut -d' ' -f3 | tr -d ',')"
+[[ -n "$(command -v git)" ]] && echo "    Git: $(git --version 2>/dev/null | cut -d' ' -f3)"
+
+# Active runtime versions
+echo ""
+echo " 🔧 Active Runtimes:"
+[[ -n "$NVM_DIR" ]] && [[ -s "$NVM_DIR/nvm.sh" ]] && echo "    NVM Node: $(nvm current 2>/dev/null || echo 'none')"
+[[ -n "$(command -v kubectl)" ]] && echo "    K8s Context: $(kubectl config current-context 2>/dev/null || echo 'none')"
+[[ -n "$AWS_PROFILE" ]] && echo "    AWS Profile: $AWS_PROFILE"
+
+# Git configuration
+if [[ -n "$(command -v git)" ]]; then
+  local git_user=$(git config --global user.name 2>/dev/null)
+  local git_email=$(git config --global user.email 2>/dev/null)
+  if [[ -n "$git_user" ]]; then
+    echo ""
+    echo " 👤 Git User: $git_user <$git_email>"
+  fi
+fi
+
+# Disk space warning (show if < 10GB free)
+if [[ "$IS_MAC" == "true" ]]; then
+  local disk_free=$(df -h / | awk 'NR==2 {print $4}' | sed 's/Gi//;s/G//')
+else
+  local disk_free=$(df -BG / | awk 'NR==2 {print $4}' | sed 's/G//')
+fi
+if [[ -n "$disk_free" ]] && [[ ${disk_free%.*} -lt 10 ]]; then
+  echo ""
+  echo " ⚠️  Low disk space: ${disk_free}GB remaining"
+fi
+
+echo ""
+echo " 📝 Type 'zshconfig' to edit config"
+echo " 🎨 Type 'starshipconfig' to edit prompt"
+echo " 🔄 Type 'update' to update packages"
+echo "=========================================="

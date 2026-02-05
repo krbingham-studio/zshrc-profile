@@ -5,3 +5,6 @@ config/linux.zsh.local
 
 # Secrets (already being loaded from ~/.zsh_secrets)
 .zsh_secrets
+
+# Node.js
+node_modules/

@@ -1,0 +1,25 @@
+{
+  "name": "zshrc-profile",
+  "version": "1.0.0",
+  "description": "A portable, modular ZSH configuration that works seamlessly across macOS and Linux (WSL2)",
+  "private": true,
+  "scripts": {
+    "lint": "shellcheck .zshrc config/*.zsh",
+    "format": "prettier --write '**/*.{zsh,sh}'",
+    "format:check": "prettier --check '**/*.{zsh,sh}'",
+    "check": "pnpm run lint && pnpm run format:check"
+  },
+  "keywords": [
+    "zsh",
+    "dotfiles",
+    "shell",
+    "configuration"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^3.4.2",
+    "prettier-plugin-sh": "^0.18.0",
+    "shellcheck": "^3.0.0"
+  }
+}

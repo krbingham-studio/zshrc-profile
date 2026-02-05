@@ -1,0 +1,16 @@
+{
+  "tabWidth": 2,
+  "useTabs": false,
+  "endOfLine": "lf",
+  "printWidth": 100,
+  "trailingComma": "none",
+  "plugins": ["prettier-plugin-sh"],
+  "overrides": [
+    {
+      "files": ["*.zsh", "*.sh"],
+      "options": {
+        "parser": "sh"
+      }
+    }
+  ]
+}

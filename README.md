@@ -212,6 +212,72 @@ For configuration that should NOT be synced (like local paths or secrets):
 - This repository should be **private** if it contains any machine-specific paths or identifiers
 - Review before committing to ensure no sensitive data is included
 
+## 🧪 Development
+
+This project uses PNPM for package management and includes linting and formatting tools to ensure code quality.
+
+### Prerequisites
+
+Install PNPM if you haven't already:
+```bash
+# Using Homebrew
+brew install pnpm
+
+# Or using npm
+npm install -g pnpm
+```
+
+### Setup
+
+Install development dependencies:
+```bash
+pnpm install
+```
+
+### Available Commands
+
+- **Lint**: Check for shell script issues using ShellCheck
+  ```bash
+  pnpm run lint
+  ```
+
+- **Format**: Auto-format shell scripts using Prettier
+  ```bash
+  pnpm run format
+  ```
+
+- **Format Check**: Check if files are properly formatted (useful in CI)
+  ```bash
+  pnpm run format:check
+  ```
+
+- **Check All**: Run both linting and format checking
+  ```bash
+  pnpm run check
+  ```
+
+### Tools Used
+
+- **[ShellCheck](https://www.shellcheck.net/)** - Static analysis tool for shell scripts
+- **[Prettier](https://prettier.io/)** with **[prettier-plugin-sh](https://github.com/un-ts/prettier/tree/master/packages/sh)** - Code formatter for shell scripts
+
+### GitHub Actions
+
+This repository includes a GitHub Actions workflow that automatically:
+- Runs ShellCheck on all `.zsh` files
+- Verifies formatting with Prettier
+- Runs on every push to `main` and on all pull requests
+
+The workflow configuration can be found in [.github/workflows/lint.yml](.github/workflows/lint.yml).
+
+### Configuration Files
+
+- [.shellcheckrc](.shellcheckrc) - ShellCheck configuration
+- [.prettierrc](.prettierrc) - Prettier configuration
+- [.prettierignore](.prettierignore) - Files to ignore when formatting
+- [.editorconfig](.editorconfig) - Editor configuration for consistent formatting
+- [package.json](package.json) - Node.js package configuration with scripts
+
 ## 🐛 Troubleshooting
 
 ### Configuration not loading

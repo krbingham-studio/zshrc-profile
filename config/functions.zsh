@@ -3,24 +3,28 @@
 # ============================================
 
 # Create directory and cd into it
-mkcd() { 
-  mkdir -p "$1" && cd "$1" 
+mkcd() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: mkcd <directory>"
+    return 1
+  fi
+  mkdir -p "$1" && cd "$1" || return 1
 }
 
 # Extract various archive formats
 extract() {
   if [ -f "$1" ]; then
     case $1 in
-      *.tar.bz2)   tar xjf "$1"     ;;
-      *.tar.gz)    tar xzf "$1"     ;;
-      *.bz2)       bunzip2 "$1"     ;;
-      *.rar)       unrar e "$1"     ;;
-      *.gz)        gunzip "$1"      ;;
-      *.tar)       tar xf "$1"      ;;
-      *.tbz2)      tar xjf "$1"     ;;
-      *.tgz)       tar xzf "$1"     ;;
-      *.zip)       unzip "$1"       ;;
-      *)           echo "'$1' cannot be extracted via extract()" ;;
+      *.tar.bz2) tar xjf "$1" ;;
+      *.tar.gz) tar xzf "$1" ;;
+      *.bz2) bunzip2 "$1" ;;
+      *.rar) unrar e "$1" ;;
+      *.gz) gunzip "$1" ;;
+      *.tar) tar xf "$1" ;;
+      *.tbz2) tar xjf "$1" ;;
+      *.tgz) tar xzf "$1" ;;
+      *.zip) unzip "$1" ;;
+      *) echo "'$1' cannot be extracted via extract()" ;;
     esac
   else
     echo "'$1' is not a valid file"
@@ -33,7 +37,7 @@ killp() {
     echo "Usage: killp <process_name>"
     return 1
   fi
-  ps aux | grep -i "$1" | grep -v grep | awk '{print $2}' | xargs kill -9 2>/dev/null
+  ps aux | grep -i "$1" | grep -v grep | awk '{print $2}' | xargs kill -9 2> /dev/null
   echo "Killed processes matching: $1"
 }
 
@@ -58,8 +62,8 @@ backup() {
 }
 
 # Show directory sizes sorted
-dirsize() { 
-  du -sh * | sort -hr 
+dirsize() {
+  du -sh * | sort -hr
 }
 
 # Find files containing pattern
@@ -77,7 +81,7 @@ gclone() {
     echo "Usage: gclone <git_url>"
     return 1
   fi
-  git clone "$1" && cd "$(basename "$1" .git)"
+  git clone "$1" && cd "$(basename "$1" .git)" || return 1
 }
 
 # Start simple HTTP server
@@ -105,9 +109,9 @@ newproject() {
     echo "Types: node, php, dotnet, python"
     return 1
   fi
-  
-  mkdir -p "$1" && cd "$1"
-  
+
+  mkdir -p "$1" && cd "$1" || return 1
+
   case "${2:-node}" in
     node)
       npm init -y
@@ -130,9 +134,9 @@ newproject() {
 }
 
 # PHP version switcher
-if command -v ggrep >/dev/null 2>&1 && command -v brew >/dev/null 2>&1; then
+if command -v ggrep > /dev/null 2>&1 && command -v brew > /dev/null 2>&1; then
   php_setup() {
-    local installedPhpVersions=($(brew ls --versions 2>/dev/null | ggrep -E 'php(@.*)?\s' | ggrep -oP '(?<=\s)\d\.\d' | uniq | sort))
+    local installedPhpVersions=($(brew ls --versions 2> /dev/null | ggrep -E 'php(@.*)?\s' | ggrep -oP '(?<=\s)\d\.\d' | uniq | sort))
     for phpVersion in ${installedPhpVersions[*]}; do
       local value="{"
       for otherPhpVersion in ${installedPhpVersions[*]}; do
@@ -156,16 +160,16 @@ docker_purge() {
 }
 
 # FZF integrations
-if command -v fzf >/dev/null 2>&1; then
+if command -v fzf > /dev/null 2>&1; then
   # Find and edit files
   fe() {
     local file
     file=$(fzf --preview 'bat --color=always {}' --preview-window=right:60%) && ${EDITOR:-code} "$file"
   }
-  
+
   # Find and cd to directory
   fcd() {
     local dir
-    dir=$(find . -type d -not -path '*/.*' | fzf) && cd "$dir"
+    dir=$(find . -type d -not -path '*/.*' | fzf) && cd "$dir" || return 1
   }
 fi
