@@ -165,8 +165,8 @@ battery() {
     pmset -g batt | grep -Eo "[0-9]+%" | head -1
   elif [[ "$IS_LINUX" == "true" ]]; then
     if [[ -d "/sys/class/power_supply/BAT0" ]]; then
-      local capacity=$(cat /sys/class/power_supply/BAT0/capacity 2>/dev/null)
-      local status=$(cat /sys/class/power_supply/BAT0/status 2>/dev/null)
+      local capacity=$(cat /sys/class/power_supply/BAT0/capacity 2> /dev/null)
+      local status=$(cat /sys/class/power_supply/BAT0/status 2> /dev/null)
       echo "${capacity}% (${status})"
     elif command -v acpi > /dev/null 2>&1; then
       acpi -b | awk '{print $4}' | sed 's/,//'

@@ -19,8 +19,8 @@ export COMPOSE_HTTP_TIMEOUT=120
 
 # NVM
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # Load nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # Load nvm bash_completion
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # Load nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # Load nvm bash_completion
 
 # Quidco CLI
 
@@ -122,7 +122,7 @@ command_not_found_handler() {
   case "$cmd" in
     gti) echo "💡 Did you mean: git" ;;
     dokcer) echo "💡 Did you mean: docker" ;;
-    pytohn|pyhton) echo "💡 Did you mean: python" ;;
+    pytohn | pyhton) echo "💡 Did you mean: python" ;;
     node.js) echo "💡 Did you mean: node" ;;
     claer) echo "💡 Did you mean: clear" ;;
     cd..) echo "💡 Did you mean: cd .." ;;
@@ -130,7 +130,7 @@ command_not_found_handler() {
 
   # Suggest installation via Homebrew
   if command -v brew > /dev/null 2>&1; then
-    local formula=$(brew search "^$cmd$" 2>/dev/null | head -1)
+    local formula=$(brew search "^$cmd$" 2> /dev/null | head -1)
     if [[ -n "$formula" ]]; then
       echo "📦 Install with: brew install $formula"
     fi
