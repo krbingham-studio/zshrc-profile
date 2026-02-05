@@ -4,9 +4,9 @@
 
 # General system
 if [[ "$IS_MAC" == "true" ]]; then
-    alias update='brew update && brew upgrade && brew cleanup'
+  alias update='brew update && brew upgrade && brew cleanup'
 elif [[ "$IS_LINUX" == "true" ]]; then
-    alias update='sudo apt update && sudo apt upgrade -y && brew update && brew upgrade'
+  alias update='sudo apt update && sudo apt upgrade -y && brew update && brew upgrade'
 fi
 
 # Modern ls alternatives (eza)
@@ -15,7 +15,7 @@ alias ll='eza -alF --color=auto --group-directories-first --git'
 alias la='eza -a --color=auto --group-directories-first'
 alias l='eza -F --color=auto --group-directories-first'
 alias tree='eza --tree --color=auto'
-alias lls='/bin/ls -alF'  # Traditional fallback
+alias lls='/bin/ls -alF' # Traditional fallback
 alias lla='/bin/ls -A'
 
 # Navigation
@@ -55,8 +55,8 @@ alias grh='git reset --hard'
 alias grm='git rebase main'
 
 # Git tools
-alias gup='$BREW_PREFIX/bin/gitup'  # gitup CLI (brew)
-alias gitup-gui='open -a GitUp'      # GitUp GUI app
+alias gup='$BREW_PREFIX/bin/gitup' # gitup CLI (brew)
+alias gitup-gui='open -a GitUp'    # GitUp GUI app
 
 # NVM
 alias nvml='nvm list'
@@ -110,7 +110,7 @@ alias dclean='docker system prune -af'
 alias qcc="pushd \$HOME/git/tools; docker compose exec memcached bash -c \"echo flush_all > /dev/tcp/127.0.0.1/11211\"; popd"
 
 # MySQL (only if brew is available)
-if command -v brew &>/dev/null; then
+if command -v brew &> /dev/null; then
   alias mysqlstart='brew services start mysql'
   alias mysqlstop='brew services stop mysql'
   alias mysqlrestart='brew services restart mysql'
@@ -188,11 +188,11 @@ alias documents='cd ~/Documents'
 
 # Android Studio (OS-specific)
 if [[ "$IS_LINUX" == "true" ]] && [[ -f "/snap/bin/android-studio" ]]; then
-    alias studio="/snap/bin/android-studio > /dev/null 2>&1 &"
-    alias studio.="/snap/bin/android-studio . > /dev/null 2>&1 &"
+  alias studio="/snap/bin/android-studio > /dev/null 2>&1 &"
+  alias studio.="/snap/bin/android-studio . > /dev/null 2>&1 &"
 elif [[ "$IS_MAC" == "true" ]] && [[ -d "/Applications/Android Studio.app" ]]; then
-    alias studio="open -a 'Android Studio'"
-    alias studio.="open -a 'Android Studio' ."
+  alias studio="open -a 'Android Studio'"
+  alias studio.="open -a 'Android Studio' ."
 fi
 
 # Create www directory if it doesn't exist

@@ -34,38 +34,38 @@ export PATH
 
 # Android SDK configuration (OS-specific)
 if [[ "$IS_LINUX" == "true" ]]; then
-    if [[ -d "$HOME/Android/Sdk" ]]; then
-        export ANDROID_HOME=$HOME/Android/Sdk
-        if [[ ":$PATH:" != *":$ANDROID_HOME/cmdline-tools/latest/bin:"* ]]; then
-            export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
-        fi
-        if [[ ":$PATH:" != *":$ANDROID_HOME/platform-tools:"* ]]; then
-            export PATH=$PATH:$ANDROID_HOME/platform-tools
-        fi
+  if [[ -d "$HOME/Android/Sdk" ]]; then
+    export ANDROID_HOME=$HOME/Android/Sdk
+    if [[ ":$PATH:" != *":$ANDROID_HOME/cmdline-tools/latest/bin:"* ]]; then
+      export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
     fi
+    if [[ ":$PATH:" != *":$ANDROID_HOME/platform-tools:"* ]]; then
+      export PATH=$PATH:$ANDROID_HOME/platform-tools
+    fi
+  fi
 elif [[ "$IS_MAC" == "true" ]]; then
-    if [[ -d "$HOME/Library/Android/sdk" ]]; then
-        export ANDROID_HOME=$HOME/Library/Android/sdk
-        if [[ ":$PATH:" != *":$ANDROID_HOME/cmdline-tools/latest/bin:"* ]]; then
-            export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
-        fi
-        if [[ ":$PATH:" != *":$ANDROID_HOME/platform-tools:"* ]]; then
-            export PATH=$PATH:$ANDROID_HOME/platform-tools
-        fi
+  if [[ -d "$HOME/Library/Android/sdk" ]]; then
+    export ANDROID_HOME=$HOME/Library/Android/sdk
+    if [[ ":$PATH:" != *":$ANDROID_HOME/cmdline-tools/latest/bin:"* ]]; then
+      export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
     fi
+    if [[ ":$PATH:" != *":$ANDROID_HOME/platform-tools:"* ]]; then
+      export PATH=$PATH:$ANDROID_HOME/platform-tools
+    fi
+  fi
 fi
 
 # SDKMAN (must be at end)
 export SDKMAN_DIR="$HOME/.sdkman"
 if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
-    source "$HOME/.sdkman/bin/sdkman-init.sh" 2>/dev/null || echo "⚠️  SDKMAN initialization failed (non-critical)"
+  source "$HOME/.sdkman/bin/sdkman-init.sh" 2> /dev/null || echo "⚠️  SDKMAN initialization failed (non-critical)"
 fi
 
 # Terminal-specific configurations
 if [[ "$TERM_PROGRAM" == "WarpTerminal" ]]; then
-    export WARP_IS_LOCAL_SHELL_SESSION="1"
-    unset ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE
-    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=""
+  export WARP_IS_LOCAL_SHELL_SESSION="1"
+  unset ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE
+  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=""
 fi
 
 # VS Code shell integration
