@@ -159,6 +159,95 @@ docker_purge() {
   docker image prune
 }
 
+# Battery status (works on macOS and Linux)
+battery() {
+  if [[ "$IS_MAC" == "true" ]]; then
+    pmset -g batt | grep -Eo "[0-9]+%" | head -1
+  elif [[ "$IS_LINUX" == "true" ]]; then
+    if [[ -d "/sys/class/power_supply/BAT0" ]]; then
+      local capacity=$(cat /sys/class/power_supply/BAT0/capacity 2> /dev/null)
+      local status=$(cat /sys/class/power_supply/BAT0/status 2> /dev/null)
+      echo "${capacity}% (${status})"
+    elif command -v acpi > /dev/null 2>&1; then
+      acpi -b | awk '{print $4}' | sed 's/,//'
+    else
+      echo "Battery information not available"
+    fi
+  else
+    echo "Battery information not available on this system"
+  fi
+}
+
+# Cheat sheet lookup from cheat.sh
+cheat() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: cheat <command>"
+    echo "Example: cheat tar"
+    echo "         cheat python/list comprehension"
+    return 1
+  fi
+  curl -s "cheat.sh/$1" | less -R
+}
+
+# Quick cheat without pager
+cheatq() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: cheatq <command>"
+    return 1
+  fi
+  curl -s "cheat.sh/$1?Q"
+}
+
+# Network debug tools
+netdebug() {
+  echo "\n🌐 Network Debug Information\n"
+  echo "=== Public IP ==="
+  curl -s ifconfig.me && echo ""
+  echo "\n=== Local IPs ==="
+  if [[ "$IS_MAC" == "true" ]]; then
+    ifconfig | grep "inet " | grep -v 127.0.0.1 | awk '{print $2}'
+  else
+    ip addr | grep "inet " | grep -v 127.0.0.1 | awk '{print $2}'
+  fi
+  echo "\n=== DNS Servers ==="
+  if [[ "$IS_MAC" == "true" ]]; then
+    scutil --dns | grep 'nameserver\[0\]' | awk '{print $3}'
+  else
+    cat /etc/resolv.conf | grep nameserver | awk '{print $2}'
+  fi
+  echo "\n=== Active Connections ==="
+  echo "Established connections: $(netstat -an | grep -c ESTABLISHED)"
+  echo "\n=== Listening Ports ==="
+  lsof -i -P -n | grep LISTEN | head -10
+}
+
+# Check specific port in detail
+portcheck() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: portcheck <port_number>"
+    return 1
+  fi
+  echo "Checking port $1..."
+  lsof -i :$1 -P -n
+}
+
+# DNS lookup with details
+dnscheck() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: dnscheck <domain>"
+    return 1
+  fi
+  echo "\n🔍 DNS Lookup for: $1\n"
+  echo "=== A Records ==="
+  dig +short A $1
+  echo "\n=== AAAA Records (IPv6) ==="
+  dig +short AAAA $1
+  echo "\n=== MX Records ==="
+  dig +short MX $1
+  echo "\n=== NS Records ==="
+  dig +short NS $1
+}
+
 # FZF integrations
 if command -v fzf > /dev/null 2>&1; then
   # Find and edit files
