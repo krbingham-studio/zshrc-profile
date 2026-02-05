@@ -65,6 +65,7 @@ fi
 if [[ "$TERM_PROGRAM" == "WarpTerminal" ]]; then
   export WARP_IS_LOCAL_SHELL_SESSION="1"
   unset ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE
+  # shellcheck disable=SC2034
   ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=""
 fi
 

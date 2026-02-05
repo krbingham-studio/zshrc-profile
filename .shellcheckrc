@@ -21,3 +21,27 @@ disable=SC2048
 
 # Tips depend on target shell - we're using zsh
 disable=SC2148
+
+# Consider using pgrep - we prefer grep for cross-platform compatibility
+disable=SC2009
+
+# Double quote to prevent globbing - lsof -ti: syntax requires no quotes
+disable=SC2086
+
+# Use ./*glob* or -- *glob* - not applicable for du -sh *
+disable=SC2035
+
+# Prefer mapfile or read -a - not available in all shells
+disable=SC2207
+
+# This expands when defined - intentional for dynamic aliases
+disable=SC2139
+
+# Declare and assign separately - minor issue, acceptable in zsh
+disable=SC2155
+
+# Use cd ... || exit/return - functions use || return where appropriate
+disable=SC2164
+
+# Literal braces in git log - this is valid zsh syntax
+disable=SC1083

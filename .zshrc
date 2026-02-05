@@ -78,6 +78,7 @@ if type brew &>/dev/null; then
   autoload -Uz compinit
 
   # Only regenerate .zcompdump once per day for better performance
+  # shellcheck disable=SC1009,SC1073,SC1036,SC1072
   if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
     compinit
   else
