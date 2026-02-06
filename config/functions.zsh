@@ -258,7 +258,7 @@ ghcache() {
 
   local repo=""
   local action="list"
-  
+
   # Parse arguments
   while [[ $# -gt 0 ]]; do
     case $1 in
@@ -294,7 +294,7 @@ ghcache() {
         repo=$(echo "$remote_url" | sed -E 's#.*[:/]([^/]+/[^/]+)(\.git)?$#\1#' | sed 's/\.git$//')
       fi
     fi
-    
+
     if [[ -z "$repo" ]]; then
       echo "Error: Could not determine repository. Please specify with -r owner/repo"
       return 1
@@ -310,16 +310,16 @@ ghcache() {
   elif [[ "$action" == "clear" ]]; then
     echo "Fetching caches to delete..."
     local cache_ids=$(gh cache list --repo "$repo" --json id --jq '.[].id')
-    
+
     if [[ -z "$cache_ids" ]]; then
       echo "No caches found to delete."
       return 0
     fi
-    
+
     local cache_count=$(echo "$cache_ids" | wc -l | tr -d ' ')
     echo "Found $cache_count cache(s) to delete."
     echo ""
-    
+
     # Confirm deletion
     echo -n "Delete all caches? (y/N): "
     read confirm
@@ -327,12 +327,12 @@ ghcache() {
       echo "Aborted."
       return 0
     fi
-    
+
     echo ""
     echo "Deleting caches..."
     local deleted=0
     local failed=0
-    
+
     while IFS= read -r cache_id; do
       if gh cache delete "$cache_id" --repo "$repo" 2>/dev/null; then
         ((deleted++))
@@ -342,7 +342,7 @@ ghcache() {
         echo "✗ Failed to delete cache ID: $cache_id"
       fi
     done <<< "$cache_ids"
-    
+
     echo ""
     echo "Summary: $deleted deleted, $failed failed"
   fi
