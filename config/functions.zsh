@@ -248,6 +248,106 @@ dnscheck() {
   dig +short NS $1
 }
 
+# GitHub Actions cache management
+ghcache() {
+  if ! command -v gh >/dev/null 2>&1; then
+    echo "Error: GitHub CLI (gh) is not installed"
+    echo "Install from: https://cli.github.com/"
+    return 1
+  fi
+
+  local repo=""
+  local action="list"
+  
+  # Parse arguments
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      -r|--repo)
+        repo="$2"
+        shift 2
+        ;;
+      clear|delete|clean)
+        action="clear"
+        shift
+        ;;
+      list|ls)
+        action="list"
+        shift
+        ;;
+      *)
+        echo "Unknown option: $1"
+        echo "Usage: ghcache [list|clear] [-r|--repo owner/repo]"
+        echo "  list   : List all caches (default)"
+        echo "  clear  : Delete all caches"
+        echo "  -r     : Specify repository (uses current if not provided)"
+        return 1
+        ;;
+    esac
+  done
+
+  # Determine repository
+  if [[ -z "$repo" ]]; then
+    if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+      local remote_url=$(git config --get remote.origin.url)
+      if [[ -n "$remote_url" ]]; then
+        # Extract owner/repo from various URL formats
+        repo=$(echo "$remote_url" | sed -E 's#.*[:/]([^/]+/[^/]+)(\.git)?$#\1#' | sed 's/\.git$//')
+      fi
+    fi
+    
+    if [[ -z "$repo" ]]; then
+      echo "Error: Could not determine repository. Please specify with -r owner/repo"
+      return 1
+    fi
+  fi
+
+  echo "Repository: $repo"
+  echo ""
+
+  if [[ "$action" == "list" ]]; then
+    echo "Fetching caches..."
+    gh cache list --repo "$repo"
+  elif [[ "$action" == "clear" ]]; then
+    echo "Fetching caches to delete..."
+    local cache_ids=$(gh cache list --repo "$repo" --json id --jq '.[].id')
+    
+    if [[ -z "$cache_ids" ]]; then
+      echo "No caches found to delete."
+      return 0
+    fi
+    
+    local cache_count=$(echo "$cache_ids" | wc -l | tr -d ' ')
+    echo "Found $cache_count cache(s) to delete."
+    echo ""
+    
+    # Confirm deletion
+    echo -n "Delete all caches? (y/N): "
+    read confirm
+    if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
+      echo "Aborted."
+      return 0
+    fi
+    
+    echo ""
+    echo "Deleting caches..."
+    local deleted=0
+    local failed=0
+    
+    while IFS= read -r cache_id; do
+      if gh cache delete "$cache_id" --repo "$repo" 2>/dev/null; then
+        ((deleted++))
+        echo "✓ Deleted cache ID: $cache_id"
+      else
+        ((failed++))
+        echo "✗ Failed to delete cache ID: $cache_id"
+      fi
+    done <<< "$cache_ids"
+    
+    echo ""
+    echo "Summary: $deleted deleted, $failed failed"
+  fi
+}
+
 # FZF integrations
 if command -v fzf > /dev/null 2>&1; then
   # Find and edit files
