@@ -1,0 +1,36 @@
+#!/bin/bash
+# Extract ticket number from branch name and add to conventional commit scope
+
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+
+# Run for regular commits and -m flag commits (skip merge, squash, amend, etc.)
+if [ -z "$COMMIT_SOURCE" ] || [ "$COMMIT_SOURCE" = "message" ]; then
+  # Get current branch name
+  BRANCH_NAME=$(git symbolic-ref --short HEAD 2>/dev/null)
+
+  # Extract ticket number (e.g., FORGEHELM-9 from FORGEHELM-9-realm-aware-api-context)
+  TICKET=$(echo "$BRANCH_NAME" | grep -Eo '^[A-Z]+-[0-9]+')
+
+  # If ticket found and not already in commit message
+  if [ -n "$TICKET" ]; then
+    COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+    # Check if ticket is already in the message
+    if ! grep -q "$TICKET" "$COMMIT_MSG_FILE"; then
+      # Match conventional commit pattern: type(scope): message or type: message
+      if echo "$COMMIT_MSG" | grep -Eq '^(feat|fix|chore|docs|style|refactor|perf|test|build|ci|revert)(\([^)]*\))?:'; then
+        # Has conventional commit format
+        if echo "$COMMIT_MSG" | grep -Eq '^(feat|fix|chore|docs|style|refactor|perf|test|build|ci|revert)\([^)]*\):'; then
+          # Already has a scope - replace it with ticket
+          NEW_MSG=$(echo "$COMMIT_MSG" | sed -E "s/^([^(]+)\([^)]*\)/\1($TICKET)/")
+        else
+          # No scope - add ticket as scope
+          NEW_MSG=$(echo "$COMMIT_MSG" | sed -E "s/^([^:]+):/\1($TICKET):/")
+        fi
+        echo "$NEW_MSG" > "$COMMIT_MSG_FILE"
+      fi
+      # If no conventional format, don't modify - let developer add type manually
+    fi
+  fi
+fi

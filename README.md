@@ -18,13 +18,15 @@ A portable, modular ZSH configuration that works seamlessly across macOS and Lin
 ```
 zshrc-profile/
 ├── .zshrc              # Main configuration file
-└── config/             # Modular configuration files
-    ├── aliases.zsh     # Command aliases and shortcuts
-    ├── exports.zsh     # Environment variables and PATH
-    ├── functions.zsh   # Custom shell functions
-    ├── git.zsh         # Git-specific aliases and functions
-    ├── macos.zsh       # macOS-specific configuration (work stuff)
-    └── linux.zsh       # Linux/WSL2-specific configuration
+├── config/             # Modular configuration files
+│   ├── aliases.zsh     # Command aliases and shortcuts
+│   ├── exports.zsh     # Environment variables and PATH
+│   ├── functions.zsh   # Custom shell functions
+│   ├── git.zsh         # Git-specific aliases and functions
+│   ├── macos.zsh       # macOS-specific configuration (work stuff)
+│   └── linux.zsh       # Linux/WSL2-specific configuration
+└── hooks/              # Global git hooks
+    └── prepare-commit-msg  # Auto-add ticket numbers to commits
 ```
 
 ## 🛠️ Prerequisites
@@ -109,6 +111,62 @@ brew install nvm git-delta fzf
    ```bash
    source ~/.zshrc
    ```
+
+6. **Setup global git hooks** (optional but recommended)
+   ```bash
+   setup_git_hooks
+   ```
+   
+   This will:
+   - Configure Git to use `~/.git-hooks` as the global hooks directory
+   - Create symlinks from `~/.git-hooks` to the hooks in this repo
+   - Keep hooks version-controlled and automatically updated with `git pull`
+
+## 🎣 Global Git Hooks
+
+This repository includes global git hooks that work across all your repositories.
+
+### Available Hooks
+
+#### `prepare-commit-msg`
+Automatically extracts the ticket number from your branch name and adds it to your conventional commit scope.
+
+**Example:**
+- Branch: `FORGEHELM-9-realm-aware-api-context`
+- Commit: `feat: add realm context`
+- Result: `feat(FORGEHELM-9): add realm context`
+
+**How it works:**
+- Detects branches with format: `TICKET-123-description`
+- Only modifies commits using conventional commit format (`feat:`, `fix:`, `chore:`, etc.)
+- Won't override existing scopes or tickets already in the message
+- Works with `git commit -m "message"` and interactive commits
+
+### Managing Hooks
+
+**Setup hooks:**
+```bash
+setup_git_hooks
+```
+
+**Update hooks:**
+Simply pull the latest changes - hooks are symlinked from this repo:
+```bash
+cd ~/Git/zshrc-profile
+git pull
+```
+
+**Disable for a specific repo:**
+```bash
+cd your-repo
+git config --local core.hooksPath .git/hooks
+```
+
+**Re-enable global hooks:**
+```bash
+cd your-repo
+git config --unset core.hooksPath
+```
 
 ## 🔄 Using Across Multiple Machines
 

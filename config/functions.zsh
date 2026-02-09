@@ -20,6 +20,41 @@ update_zshrc_repo() {
   } &!
 }
 
+# Setup global git hooks from this repo
+setup_git_hooks() {
+  local hooks_dir="$HOME/.git-hooks"
+  local repo_hooks="${ZSHRC_DIR}/hooks"
+
+  # Configure git to use global hooks directory
+  git config --global core.hooksPath "$hooks_dir"
+
+  # Create hooks directory if it doesn't exist
+  mkdir -p "$hooks_dir"
+
+  # Create symlinks for all hooks in the repo
+  if [[ -d "$repo_hooks" ]]; then
+    for hook in "$repo_hooks"/*; do
+      if [[ -f "$hook" ]]; then
+        local hook_name=$(basename "$hook")
+        local target="$hooks_dir/$hook_name"
+
+        # Remove existing symlink or file
+        [[ -e "$target" ]] && rm "$target"
+
+        # Create symlink
+        ln -s "$hook" "$target"
+        echo "✓ Linked $hook_name"
+      fi
+    done
+    echo ""
+    echo "Global git hooks setup complete!"
+    echo "Hooks location: $hooks_dir"
+  else
+    echo "No hooks directory found at $repo_hooks"
+    return 1
+  fi
+}
+
 # Create directory and cd into it
 mkcd() {
   if [[ -z "$1" ]]; then
