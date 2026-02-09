@@ -16,13 +16,13 @@ update_zshrc_repo() {
     if git pull origin main --quiet 2>/dev/null; then
       updated=true
       echo "[zshrc] ✓ Configuration updated from repository"
-      
+
       # Reload config files to apply changes immediately
       [[ -f "$ZSHCONFIG/exports.zsh" ]] && source "$ZSHCONFIG/exports.zsh"
       [[ -f "$ZSHCONFIG/aliases.zsh" ]] && source "$ZSHCONFIG/aliases.zsh"
       [[ -f "$ZSHCONFIG/functions.zsh" ]] && source "$ZSHCONFIG/functions.zsh"
       [[ -f "$ZSHCONFIG/git.zsh" ]] && source "$ZSHCONFIG/git.zsh"
-      
+
       echo "[zshrc] ✓ Configuration reloaded"
     else
       echo "[zshrc] ⚠ Update available but could not pull (may have local changes)"
