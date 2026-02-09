@@ -4,20 +4,30 @@
 
 # Auto-update zshrc repository
 update_zshrc_repo() {
-  {
-    cd "${ZSHRC_DIR}" 2>/dev/null || return
-    git fetch origin main --quiet 2>/dev/null
-    local local_hash=$(git rev-parse HEAD 2>/dev/null)
-    local remote_hash=$(git rev-parse origin/main 2>/dev/null)
+  local repo_dir="${ZSHRC_DIR}"
+  local updated=false
 
-    if [[ "$local_hash" != "$remote_hash" ]]; then
-      if git pull origin main --quiet 2>/dev/null; then
-        echo "[zshrc] ✓ Configuration updated from repository"
-      else
-        echo "[zshrc] ⚠ Update available but could not pull (may have local changes)"
-      fi
+  cd "$repo_dir" 2>/dev/null || return
+  git fetch origin main --quiet 2>/dev/null
+  local local_hash=$(git rev-parse HEAD 2>/dev/null)
+  local remote_hash=$(git rev-parse origin/main 2>/dev/null)
+
+  if [[ "$local_hash" != "$remote_hash" ]]; then
+    if git pull origin main --quiet 2>/dev/null; then
+      updated=true
+      echo "[zshrc] ✓ Configuration updated from repository"
+      
+      # Reload config files to apply changes immediately
+      [[ -f "$ZSHCONFIG/exports.zsh" ]] && source "$ZSHCONFIG/exports.zsh"
+      [[ -f "$ZSHCONFIG/aliases.zsh" ]] && source "$ZSHCONFIG/aliases.zsh"
+      [[ -f "$ZSHCONFIG/functions.zsh" ]] && source "$ZSHCONFIG/functions.zsh"
+      [[ -f "$ZSHCONFIG/git.zsh" ]] && source "$ZSHCONFIG/git.zsh"
+      
+      echo "[zshrc] ✓ Configuration reloaded"
+    else
+      echo "[zshrc] ⚠ Update available but could not pull (may have local changes)"
     fi
-  } &!
+  fi
 }
 
 # Setup global git hooks from this repo
