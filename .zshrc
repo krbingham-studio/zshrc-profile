@@ -197,6 +197,13 @@ esac
 # pnpm end
 
 # ============================================
+# Auto-update zshrc repository
+# ============================================
+
+# Pull latest changes from repo on terminal startup
+update_zshrc_repo
+
+# ============================================
 # Welcome Message
 # ============================================
 
@@ -258,5 +265,6 @@ fi
 echo ""
 echo " 📝 Type 'zshconfig' to edit config"
 echo " 🎨 Type 'starshipconfig' to edit prompt"
-echo " 🔄 Type 'update' to update packages"
+echo " � Type 'zshrepo' to open config repo in VS Code"
+echo " �🔄 Type 'update' to update packages"
 echo "=========================================="

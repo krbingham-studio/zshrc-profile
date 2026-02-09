@@ -40,6 +40,7 @@ alias reload='source ~/.zshrc'
 alias src='source ~/.zshrc'
 alias zshconfig='nano ~/.zshrc'
 alias starshipconfig='nano ~/.config/starship.toml'
+alias zshrepo='code "${ZSHRC_DIR:-$HOME/Git/zshrc-profile}"'
 
 # JSON/YAML formatters and validators
 alias jsonf='python3 -m json.tool'

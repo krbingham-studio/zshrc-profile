@@ -2,6 +2,24 @@
 # Custom Utility Functions
 # ============================================
 
+# Auto-update zshrc repository
+update_zshrc_repo() {
+  {
+    cd "${ZSHRC_DIR}" 2>/dev/null || return
+    git fetch origin main --quiet 2>/dev/null
+    local local_hash=$(git rev-parse HEAD 2>/dev/null)
+    local remote_hash=$(git rev-parse origin/main 2>/dev/null)
+
+    if [[ "$local_hash" != "$remote_hash" ]]; then
+      if git pull origin main --quiet 2>/dev/null; then
+        echo "[zshrc] ✓ Configuration updated from repository"
+      else
+        echo "[zshrc] ⚠ Update available but could not pull (may have local changes)"
+      fi
+    fi
+  } &!
+}
+
 # Create directory and cd into it
 mkcd() {
   if [[ -z "$1" ]]; then
