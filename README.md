@@ -118,8 +118,8 @@ brew install nvm git-delta fzf
    ```
    
    This will:
-   - Configure Git to use `~/.git-hooks` as the global hooks directory
-   - Create symlinks from `~/.git-hooks` to the hooks in this repo
+   - Configure Git to use `~/Git/zshrc-profile/hooks` as the global hooks directory
+   - Make all hooks in the repo executable
    - Keep hooks version-controlled and automatically updated with `git pull`
 
 ## 🎣 Global Git Hooks
@@ -149,8 +149,10 @@ Automatically extracts the ticket number from your branch name and adds it to yo
 setup_git_hooks
 ```
 
+This configures Git globally to use hooks directly from `~/Git/zshrc-profile/hooks`.
+
 **Update hooks:**
-Simply pull the latest changes - hooks are symlinked from this repo:
+Simply pull the latest changes - hooks are used directly from this repo:
 ```bash
 cd ~/Git/zshrc-profile
 git pull
@@ -165,7 +167,7 @@ git config --local core.hooksPath .git/hooks
 **Re-enable global hooks:**
 ```bash
 cd your-repo
-git config --unset core.hooksPath
+git config --unset --local core.hooksPath
 ```
 
 ## 🔄 Using Across Multiple Machines
