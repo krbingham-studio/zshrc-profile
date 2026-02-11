@@ -6,6 +6,7 @@
 update_zshrc_repo() {
   local repo_dir="${ZSHRC_DIR}"
   local updated=false
+  local previous_dir="$PWD"
 
   cd "$repo_dir" 2>/dev/null || return
   git fetch origin main --quiet 2>/dev/null
@@ -28,6 +29,8 @@ update_zshrc_repo() {
       echo "[zshrc] ⚠ Update available but could not pull (may have local changes)"
     fi
   fi
+
+  cd "$previous_dir"
 }
 
 # Setup global git hooks from this repo

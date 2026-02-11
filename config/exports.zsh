@@ -7,7 +7,7 @@ export KUBECONFIG="${HOME}/.kube/config"
 export HOST_FILE=/etc/hosts
 
 # Programming Languages & Tools
-export JAVA_HOME="$BREW_PREFIX/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"
+# export JAVA_HOME="$BREW_PREFIX/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"
 
 # .NET
 export PATH="$BREW_PREFIX/opt/dotnet@8/bin:$PATH"
