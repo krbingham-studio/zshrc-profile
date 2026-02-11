@@ -6,6 +6,7 @@
 update_zshrc_repo() {
   local repo_dir="${ZSHRC_DIR}"
   local updated=false
+  local previous_dir="$PWD"
 
   cd "$repo_dir" 2>/dev/null || return
   git fetch origin main --quiet 2>/dev/null
@@ -28,41 +29,34 @@ update_zshrc_repo() {
       echo "[zshrc] ⚠ Update available but could not pull (may have local changes)"
     fi
   fi
+
+  cd "$previous_dir"
 }
 
 # Setup global git hooks from this repo
 setup_git_hooks() {
-  local hooks_dir="$HOME/.git-hooks"
   local repo_hooks="${ZSHRC_DIR}/hooks"
 
-  # Configure git to use global hooks directory
-  git config --global core.hooksPath "$hooks_dir"
-
-  # Create hooks directory if it doesn't exist
-  mkdir -p "$hooks_dir"
-
-  # Create symlinks for all hooks in the repo
-  if [[ -d "$repo_hooks" ]]; then
-    for hook in "$repo_hooks"/*; do
-      if [[ -f "$hook" ]]; then
-        local hook_name=$(basename "$hook")
-        local target="$hooks_dir/$hook_name"
-
-        # Remove existing symlink or file
-        [[ -e "$target" ]] && rm "$target"
-
-        # Create symlink
-        ln -s "$hook" "$target"
-        echo "✓ Linked $hook_name"
-      fi
-    done
-    echo ""
-    echo "Global git hooks setup complete!"
-    echo "Hooks location: $hooks_dir"
-  else
-    echo "No hooks directory found at $repo_hooks"
+  if [[ ! -d "$repo_hooks" ]]; then
+    echo "⚠️  No hooks directory found at $repo_hooks"
     return 1
   fi
+
+  # Configure git to use hooks directory directly from this repo
+  git config --global core.hooksPath "$repo_hooks"
+
+  # Make all hooks executable
+  chmod +x "$repo_hooks"/*
+
+  echo "✓ Global git hooks configured"
+  echo "Hooks location: $repo_hooks"
+  echo ""
+  echo "Available hooks:"
+  for hook in "$repo_hooks"/*; do
+    if [[ -f "$hook" ]]; then
+      echo "  - $(basename "$hook")"
+    fi
+  done
 }
 
 # Create directory and cd into it
