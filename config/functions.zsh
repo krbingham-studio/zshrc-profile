@@ -8,13 +8,13 @@ update_zshrc_repo() {
   local updated=false
   local previous_dir="$PWD"
 
-  cd "$repo_dir" 2>/dev/null || return
-  git fetch origin main --quiet 2>/dev/null
-  local local_hash=$(git rev-parse HEAD 2>/dev/null)
-  local remote_hash=$(git rev-parse origin/main 2>/dev/null)
+  cd "$repo_dir" 2> /dev/null || return
+  git fetch origin main --quiet 2> /dev/null
+  local local_hash=$(git rev-parse HEAD 2> /dev/null)
+  local remote_hash=$(git rev-parse origin/main 2> /dev/null)
 
   if [[ "$local_hash" != "$remote_hash" ]]; then
-    if git pull origin main --quiet 2>/dev/null; then
+    if git pull origin main --quiet 2> /dev/null; then
       updated=true
       echo "[zshrc] ✓ Configuration updated from repository"
 
@@ -307,7 +307,7 @@ dnscheck() {
 
 # GitHub Actions cache management
 ghcache() {
-  if ! command -v gh >/dev/null 2>&1; then
+  if ! command -v gh > /dev/null 2>&1; then
     echo "Error: GitHub CLI (gh) is not installed"
     echo "Install from: https://cli.github.com/"
     return 1
@@ -319,15 +319,15 @@ ghcache() {
   # Parse arguments
   while [[ $# -gt 0 ]]; do
     case $1 in
-      -r|--repo)
+      -r | --repo)
         repo="$2"
         shift 2
         ;;
-      clear|delete|clean)
+      clear | delete | clean)
         action="clear"
         shift
         ;;
-      list|ls)
+      list | ls)
         action="list"
         shift
         ;;
@@ -344,7 +344,7 @@ ghcache() {
 
   # Determine repository
   if [[ -z "$repo" ]]; then
-    if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
       local remote_url=$(git config --get remote.origin.url)
       if [[ -n "$remote_url" ]]; then
         # Extract owner/repo from various URL formats
@@ -391,7 +391,7 @@ ghcache() {
     local failed=0
 
     while IFS= read -r cache_id; do
-      if gh cache delete "$cache_id" --repo "$repo" 2>/dev/null; then
+      if gh cache delete "$cache_id" --repo "$repo" 2> /dev/null; then
         ((deleted++))
         echo "✓ Deleted cache ID: $cache_id"
       else

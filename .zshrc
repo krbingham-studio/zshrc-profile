@@ -167,6 +167,7 @@ if [[ "$IS_MAC" == "true" ]]; then
     [[ -f "$ZSHCONFIG/macos.zsh.local" ]] && source "$ZSHCONFIG/macos.zsh.local"
 else
     [[ -f "$ZSHCONFIG/linux.zsh" ]] && source "$ZSHCONFIG/linux.zsh"
+    [[ -f "$ZSHCONFIG/linux.zsh.local" ]] && source "$ZSHCONFIG/linux.zsh.local"
 fi
 
 # Load secrets from separate file (tokens, API keys, etc.)
