@@ -5,7 +5,6 @@
 # Auto-update zshrc repository
 update_zshrc_repo() {
   local repo_dir="${ZSHRC_DIR}"
-  local updated=false
   local previous_dir="$PWD"
 
   cd "$repo_dir" 2> /dev/null || return
@@ -15,7 +14,6 @@ update_zshrc_repo() {
 
   if [[ "$local_hash" != "$remote_hash" ]]; then
     if git pull origin main --quiet 2> /dev/null; then
-      updated=true
       echo "[zshrc] ✓ Configuration updated from repository"
 
       # Reload config files to apply changes immediately
@@ -379,7 +377,7 @@ ghcache() {
 
     # Confirm deletion
     echo -n "Delete all caches? (y/N): "
-    read confirm
+    read -r confirm
     if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
       echo "Aborted."
       return 0
