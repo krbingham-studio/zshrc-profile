@@ -2,6 +2,66 @@
 # Git-Specific Functions & Aliases
 # ============================================
 
+gcb() {
+  if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+    echo "Error: Not inside a git repository"
+    return 1
+  fi
+
+  if [[ -z "$1" ]]; then
+    echo "Usage: gcb <new-branch-name>"
+    return 1
+  fi
+
+  local new_branch="$1"
+  local current_branch=$(git branch --show-current)
+  local default_branch=$(git symbolic-ref --short refs/remotes/origin/HEAD 2> /dev/null)
+  default_branch=${default_branch#origin/}
+
+  if [[ -z "$default_branch" ]]; then
+    if git show-ref --verify --quiet refs/heads/main; then
+      default_branch="main"
+    elif git show-ref --verify --quiet refs/heads/master; then
+      default_branch="master"
+    fi
+  fi
+
+  echo "Create '$new_branch' from:"
+  if [[ -n "$default_branch" ]]; then
+    echo "  1) default branch ($default_branch)"
+  else
+    echo "  1) default branch (not detected)"
+  fi
+  echo "  2) current branch ($current_branch)"
+
+  local choice
+  read -r "choice?Select [1/2] (default: 1): "
+  choice=${choice:-1}
+
+  case "$choice" in
+    1)
+      if [[ -z "$default_branch" ]]; then
+        echo "Error: Could not determine default branch"
+        return 1
+      fi
+
+      if [[ "$current_branch" != "$default_branch" ]]; then
+        git checkout "$default_branch" || return 1
+      fi
+
+      git pull --ff-only || return 1
+      git checkout -b "$new_branch"
+      ;;
+    2)
+      git checkout -b "$new_branch"
+      ;;
+    *)
+      echo "Cancelled"
+      return 1
+      ;;
+  esac
+}
+
 # Switch all repos in a directory to their default branch
 git-default-all() {
   local target_dir="${1:-.}"
