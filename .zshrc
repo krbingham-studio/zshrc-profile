@@ -266,6 +266,6 @@ fi
 echo ""
 echo " 📝 Type 'zshconfig' to edit config"
 echo " 🎨 Type 'starshipconfig' to edit prompt"
-echo " � Type 'zshrepo' to open config repo in VS Code"
-echo " �🔄 Type 'update' to update packages"
+echo " 📝 Type 'zshrepo' to open config repo in VS Code"
+echo " 🔄 Type 'update' to update packages"
 echo "=========================================="
