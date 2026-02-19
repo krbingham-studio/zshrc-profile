@@ -417,3 +417,18 @@ if command -v fzf > /dev/null 2>&1; then
     dir=$(find . -type d -not -path '*/.*' | fzf) && cd "$dir" || return 1
   }
 fi
+
+# Edit hosts file with vi and sudo, using correct path for OS
+edithosts() {
+  local hosts_file=""
+  if [[ "$IS_MAC" == "true" ]]; then
+    hosts_file="/etc/hosts"
+  elif [[ "$IS_LINUX" == "true" ]]; then
+    hosts_file="/etc/hosts"
+  else
+    echo "Unsupported OS for editing hosts file."
+    return 1
+  fi
+  echo "Editing $hosts_file with sudo and vi..."
+  sudo nano "$hosts_file"
+}
