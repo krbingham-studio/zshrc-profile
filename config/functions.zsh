@@ -403,6 +403,44 @@ ghcache() {
   fi
 }
 
+# Find and delete all dist folders in a directory
+cleandist() {
+  local search_dir="${1:-.}"
+
+  if [[ ! -d "$search_dir" ]]; then
+    echo "Error: '$search_dir' is not a valid directory"
+    return 1
+  fi
+
+  local dist_dirs
+  dist_dirs=$(find "$search_dir" -type d -name "node_modules" -prune -o -type d -name "dist" -print 2> /dev/null)
+
+  if [[ -z "$dist_dirs" ]]; then
+    echo "No dist folders found in $search_dir"
+    return 0
+  fi
+
+  local count
+  count=$(echo "$dist_dirs" | wc -l | tr -d ' ')
+  echo "Found $count dist folder(s):"
+  echo "  ${dist_dirs//$'\n'/$'\n'  }"
+  echo ""
+  echo -n "Delete all? (y/N): "
+  read -r confirm
+  if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
+    echo "Aborted."
+    return 0
+  fi
+
+  echo "$dist_dirs" | while IFS= read -r dir; do
+    if rm -rf "$dir"; then
+      echo "✓ Deleted: $dir"
+    else
+      echo "✗ Failed to delete: $dir"
+    fi
+  done
+}
+
 # FZF integrations
 if command -v fzf > /dev/null 2>&1; then
   # Find and edit files
