@@ -6,5 +6,9 @@ config/linux.zsh.local
 # Secrets (already being loaded from ~/.zsh_secrets)
 .zsh_secrets
 
+# Local symlinks pointing to live dotfiles (machine-specific)
+.zshrc.system
+.zsh_secrets.system
+
 # Node.js
 node_modules/

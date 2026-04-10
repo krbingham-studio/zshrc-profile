@@ -18,6 +18,8 @@ A portable, modular ZSH configuration that works seamlessly across macOS and Lin
 ```
 zshrc-profile/
 ├── .zshrc              # Main configuration file
+├── .zshrc.system       # Symlink -> ~/.zshrc (local, not committed)
+├── .zsh_secrets.system # Symlink -> ~/.zsh_secrets (local, not committed)
 ├── config/             # Modular configuration files
 │   ├── aliases.zsh     # Command aliases and shortcuts
 │   ├── exports.zsh     # Environment variables and PATH
@@ -107,7 +109,17 @@ brew install nvm git-delta fzf
    export OPENAI_API_KEY="your_key_here"
    ```
 
-5. **Reload your shell**
+5. **Create local symlinks for IDE/editor access** (optional)
+
+   Symlink your local dotfiles into the repo so you can edit them directly from this directory:
+   ```bash
+   ln -s ~/.zshrc ~/Git/zshrc-profile/.zshrc.system
+   ln -s ~/.zsh_secrets ~/Git/zshrc-profile/.zsh_secrets.system
+   ```
+
+   These are ignored by git (see `.gitignore`) — they're just convenience pointers so your editor can open the live files from within the repo.
+
+6. **Reload your shell**
    ```bash
    source ~/.zshrc
    ```
