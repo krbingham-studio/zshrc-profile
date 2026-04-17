@@ -21,3 +21,5 @@ elif command -v xsel > /dev/null 2>&1; then
   alias pbcopy='xsel --clipboard --input'
   alias pbpaste='xsel --clipboard --output'
 fi
+
+export PATH="$HOME/.local/bin:$PATH"
