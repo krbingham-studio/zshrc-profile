@@ -249,6 +249,20 @@ For configuration that should NOT be synced (like local paths or secrets):
    fi
    ```
 
+### `GIT_HOME` — Git Repositories Root
+
+The `repo` function searches for git repositories under `~/Git` by default. If your repos live elsewhere, set `GIT_HOME` in `~/.zsh_secrets` or your local config:
+
+```bash
+export GIT_HOME="$HOME/Projects"
+```
+
+Usage:
+```bash
+repo            # fzf fuzzy picker across all repos
+repo zshrc      # jump directly if only one match, otherwise filter in fzf
+```
+
 ## 🎯 Included Features
 
 ### Modern CLI Aliases
@@ -266,6 +280,7 @@ For configuration that should NOT be synced (like local paths or secrets):
 
 ### Utility Functions
 
+- `repo` - Jump to any git repo under `~/Git` by name (fzf fuzzy picker or exact match)
 - `mkcd` - Create directory and cd into it
 - `extract` - Extract any archive format
 - `killp` - Kill processes by name

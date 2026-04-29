@@ -441,6 +441,41 @@ cleandist() {
   done
 }
 
+# Navigate to a repo by name within $GIT_HOME (default: ~/Git)
+repo() {
+  local git_home="${GIT_HOME:-$HOME/Git}"
+
+  if [[ ! -d "$git_home" ]]; then
+    echo "repo: directory not found: $git_home"
+    return 1
+  fi
+
+  local repos
+  repos=$(find "$git_home" -maxdepth 3 -name ".git" -type d 2>/dev/null | sed 's|/.git$||')
+
+  if command -v fzf > /dev/null 2>&1; then
+    local target
+    target=$(echo "$repos" | sed "s|$git_home/||" | fzf --query="${1:-}" --select-1 --exit-0)
+    [[ -n "$target" ]] && cd "$git_home/$target" || return 1
+  else
+    if [[ -z "$1" ]]; then
+      echo "$repos" | sed "s|$git_home/||"
+      return 0
+    fi
+    local target
+    target=$(echo "$repos" | grep -i "/$1$" | head -1)
+    if [[ -z "$target" ]]; then
+      target=$(echo "$repos" | grep -i "$1" | head -1)
+    fi
+    if [[ -n "$target" ]]; then
+      cd "$target" || return 1
+    else
+      echo "repo: no match for '$1'"
+      return 1
+    fi
+  fi
+}
+
 # FZF integrations
 if command -v fzf > /dev/null 2>&1; then
   # Find and edit files

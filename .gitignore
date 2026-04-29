@@ -12,3 +12,12 @@ config/linux.zsh.local
 
 # Node.js
 node_modules/
+
+# OpenWolf runtime/generated files (not project knowledge)
+.wolf/daemon.log
+.wolf/token-ledger.json
+.wolf/designqc-report.json
+.wolf/designqc-captures/
+.wolf/suggestions.json
+.wolf/cron-state.json
+.wolf/hooks/
