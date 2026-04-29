@@ -451,7 +451,7 @@ repo() {
   fi
 
   local repos
-  repos=$(find "$git_home" -maxdepth 3 -name ".git" -type d 2>/dev/null | sed 's|/.git$||')
+  repos=$(find "$git_home" -maxdepth 5 -name "node_modules" -prune -o -name ".git" -type d -print 2>/dev/null | sed 's|/.git$||')
 
   if command -v fzf > /dev/null 2>&1; then
     local target

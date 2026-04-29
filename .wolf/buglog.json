@@ -1,4 +1,21 @@
 {
   "version": 1,
-  "bugs": []
+  "bugs": [
+    {
+      "id": "bug-001",
+      "timestamp": "2026-04-29T12:02:27.910Z",
+      "error_message": "Incorrect value in code",
+      "file": "config/functions.zsh",
+      "root_cause": "Had \".git\"",
+      "fix": "Changed to \"node_modules\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "zsh"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-04-29T12:02:27.910Z"
+    }
+  ]
 }

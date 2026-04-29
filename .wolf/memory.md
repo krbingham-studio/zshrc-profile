@@ -21,3 +21,6 @@
 | 12:50 | Edited README.md | 6→7 lines | ~67 |
 | 12:50 | Edited README.md | modified searches() | ~194 |
 | 12:50 | Session end: 8 writes across 6 files (.gitignore, settings.json, SKILL.md, shell-reviewer.md, functions.zsh) | 6 reads | ~8487 tok |
+| 12:52 | Session end: 8 writes across 6 files (.gitignore, settings.json, SKILL.md, shell-reviewer.md, functions.zsh) | 6 reads | ~8487 tok |
+| 13:02 | Edited config/functions.zsh | inline fix | ~35 |
+| 13:02 | Session end: 9 writes across 6 files (.gitignore, settings.json, SKILL.md, shell-reviewer.md, functions.zsh) | 6 reads | ~11952 tok |

@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-04-29T11:50:14.898Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-04-29T12:02:27.902Z
 > Files: 26 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
@@ -46,7 +46,7 @@
 
 - `aliases.zsh` — Aliases (~1691 tok)
 - `exports.zsh` — Environment Variables & Path Configuration (~1179 tok)
-- `functions.zsh` — Custom Utility Functions incl. repo() for git repo navigation (~3428 tok)
+- `functions.zsh` — ============================================ (~3438 tok)
 - `git.zsh` — Git-Specific Functions & Aliases (~1596 tok)
 - `linux.zsh` — Linux-specific configuration (~209 tok)
 - `linux.zsh.local` (~30 tok)
