@@ -32,3 +32,4 @@
 | 14:00 | Added ai-sync multi-tool function + helpers | config/functions.zsh | claude-code + github-copilot support, extensible | ~400 |
 | 14:00 | Added FORGEHELM_API_URL/TOKEN env vars | config/exports.zsh | defaults to localhost:4000 | ~30 |
 | 14:00 | Added aisync/aisynca/ccsync/ghsync aliases | config/aliases.zsh | ai-sync shortcuts | ~50 |
+| 14:30 | Fixed CI failures on PR #5 | config/functions.zsh, config/aliases.zsh | SC2012: replaced ls -d with find; inline disable for ls -t; Prettier formatting applied | ~200 |
