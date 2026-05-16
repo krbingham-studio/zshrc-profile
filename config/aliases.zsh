@@ -226,10 +226,10 @@ elif [[ "$IS_MAC" == "true" ]] && [[ -d "/Applications/Android Studio.app" ]]; t
 fi
 
 # AI tool sync (requires FORGEHELM_API_TOKEN in ~/.zsh_secrets)
-alias aisync='ai-sync'                          # Claude Code (default)
-alias aisynca='ai-sync --all'                   # All detected AI tools
-alias ccsync='ai-sync --tool claude-code'       # Claude Code only
-alias ghsync='ai-sync --tool github-copilot'   # GitHub Copilot only
+alias aisync='ai-sync'                       # Claude Code (default)
+alias aisynca='ai-sync --all'                # All detected AI tools
+alias ccsync='ai-sync --tool claude-code'    # Claude Code only
+alias ghsync='ai-sync --tool github-copilot' # GitHub Copilot only
 
 # Create www directory if it doesn't exist
 [ ! -d "$HOME/www" ] && mkdir -p "$HOME/www"
