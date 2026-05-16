@@ -44,9 +44,9 @@
 
 ## config/
 
-- `aliases.zsh` — Aliases (~1691 tok)
-- `exports.zsh` — Environment Variables & Path Configuration (~1179 tok)
-- `functions.zsh` — ============================================ (~3438 tok)
+- `aliases.zsh` — Aliases + ai-sync shortcuts (aisync/aisynca/ccsync/ghsync) (~1720 tok)
+- `exports.zsh` — Environment Variables, Path Config, FORGEHELM_API_URL/TOKEN (~1200 tok)
+- `functions.zsh` — Shell functions including ai-sync (multi-tool AI data sync to Forgehelm) (~4200 tok)
 - `git.zsh` — Git-Specific Functions & Aliases (~1596 tok)
 - `linux.zsh` — Linux-specific configuration (~209 tok)
 - `linux.zsh.local` (~30 tok)

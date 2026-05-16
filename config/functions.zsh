@@ -451,7 +451,7 @@ repo() {
   fi
 
   local repos
-  repos=$(find "$git_home" -maxdepth 5 -name "node_modules" -prune -o -name ".git" -type d -print 2>/dev/null | sed 's|/.git$||')
+  repos=$(find "$git_home" -maxdepth 5 -name "node_modules" -prune -o -name ".git" -type d -print 2> /dev/null | sed 's|/.git$||')
 
   if command -v fzf > /dev/null 2>&1; then
     local target
@@ -490,6 +490,187 @@ if command -v fzf > /dev/null 2>&1; then
     dir=$(find . -type d -not -path '*/.*' | fzf) && cd "$dir" || return 1
   }
 fi
+
+# ─── AI Tool Sync ─────────────────────────────────────────────────────────────
+# Push AI tool usage snapshots to your Forgehelm dashboard.
+# Supports: claude-code, github-copilot.
+# Add new tools by implementing _ai_sync_collect_<tool-name>() below.
+#
+# Usage:
+#   ai-sync                      # Claude Code only (default)
+#   ai-sync --all                # All detected tools
+#   ai-sync --tool github-copilot
+#
+# Requires FORGEHELM_API_TOKEN set in ~/.zsh_secrets.
+# Generate a token at /admin/tokens in Forgehelm Studio.
+# ─────────────────────────────────────────────────────────────────────────────
+ai-sync() {
+  local api_url="${FORGEHELM_API_URL:-http://localhost:4000/graphql}"
+  local api_token="${FORGEHELM_API_TOKEN:-}"
+  local tools=("claude-code")
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --all)
+        tools=("claude-code" "github-copilot")
+        shift
+        ;;
+      --tool)
+        tools=("$2")
+        shift 2
+        ;;
+      *) shift ;;
+    esac
+  done
+
+  if [[ -z "$api_token" ]]; then
+    echo "[ai-sync] Error: FORGEHELM_API_TOKEN is not set."
+    echo "  1. Generate a token at /admin/tokens in Forgehelm Studio."
+    echo "  2. Add to ~/.zsh_secrets: export FORGEHELM_API_TOKEN=<token>"
+    return 1
+  fi
+
+  local mutation='mutation CreateAiUsageSnapshot($source: String!, $claudeVersion: String, $sessionId: String, $data: Json!) { createAiUsageSnapshot(source: $source, claudeVersion: $claudeVersion, sessionId: $sessionId, data: $data) { id capturedAt } }'
+
+  for tool in "${tools[@]}"; do
+    local source="" claude_version="" session_id="" tool_data=""
+
+    case "$tool" in
+      claude-code)
+        source="claude-code"
+        claude_version="${CLAUDE_CODE_VERSION:-}"
+        session_id="${CLAUDE_CODE_SESSION_ID:-}"
+        tool_data=$(_ai_sync_collect_claude_code 2> /dev/null)
+        ;;
+      github-copilot)
+        if ! command -v gh > /dev/null 2>&1; then
+          echo "[ai-sync] Skipping github-copilot: gh CLI not installed"
+          continue
+        fi
+        source="github-copilot"
+        tool_data=$(_ai_sync_collect_github_copilot 2> /dev/null)
+        ;;
+      *)
+        echo "[ai-sync] Unknown tool: $tool (supported: claude-code, github-copilot)"
+        continue
+        ;;
+    esac
+
+    if [[ -z "$tool_data" ]]; then
+      echo "[ai-sync] ✗ $tool: failed to collect data"
+      continue
+    fi
+
+    echo "[ai-sync] Syncing $tool..."
+
+    local payload
+    payload=$(jq -n \
+      --arg query "$mutation" \
+      --arg src "$source" \
+      --arg cv "$claude_version" \
+      --arg sid "$session_id" \
+      --argjson data "$tool_data" \
+      '{query: $query, variables: {
+        source: $src,
+        claudeVersion: (if $cv == "" then null else $cv end),
+        sessionId: (if $sid == "" then null else $sid end),
+        data: $data
+      }}' 2> /dev/null)
+
+    if [[ -z "$payload" ]]; then
+      echo "[ai-sync] ✗ $tool: failed to build request payload"
+      continue
+    fi
+
+    local response
+    response=$(curl -sf -X POST "$api_url" \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer $api_token" \
+      -d "$payload" 2> /dev/null)
+
+    if echo "$response" | jq -e '.data.createAiUsageSnapshot.id' > /dev/null 2>&1; then
+      local snap_id
+      snap_id=$(echo "$response" | jq -r '.data.createAiUsageSnapshot.id')
+      echo "[ai-sync] ✓ $tool snapshot saved (id: ${snap_id:0:8}...)"
+    else
+      local err
+      err=$(echo "$response" | jq -r '.errors[0].message // "no response from server"' 2> /dev/null)
+      echo "[ai-sync] ✗ $tool failed: $err"
+    fi
+  done
+}
+
+# ── Internal: collect Claude Code data ────────────────────────────────────────
+_ai_sync_collect_claude_code() {
+  local account_uuid="${CLAUDE_CODE_ACCOUNT_UUID:-}"
+  local org_uuid="${CLAUDE_CODE_ORGANIZATION_UUID:-}"
+  local first_start="" enabled_flags=0 skills_count=0 project_count=0
+  local session_cwd="" session_started_at="" session_kind=""
+
+  if [[ -f "$HOME/.claude.json" ]]; then
+    enabled_flags=$(jq '[.cachedGrowthBookFeatures | to_entries[] | select(.value == true)] | length' \
+      "$HOME/.claude.json" 2> /dev/null || echo 0)
+    first_start=$(jq -r '.firstStartTime // ""' "$HOME/.claude.json" 2> /dev/null)
+  fi
+
+  local sessions_dir="$HOME/.claude/sessions"
+  if [[ -d "$sessions_dir" ]]; then
+    local session_file
+    # shellcheck disable=SC2012
+    session_file=$(ls -t "$sessions_dir"/*.json 2> /dev/null | head -1)
+    if [[ -n "$session_file" ]]; then
+      session_cwd=$(jq -r '.cwd // ""' "$session_file" 2> /dev/null)
+      session_started_at=$(jq -r '.startedAt // ""' "$session_file" 2> /dev/null)
+      session_kind=$(jq -r '.kind // ""' "$session_file" 2> /dev/null)
+    fi
+  fi
+
+  [[ -d "$HOME/.claude/skills" ]] \
+    && skills_count=$(find "$HOME/.claude/skills" -mindepth 1 -maxdepth 1 -type d 2> /dev/null | wc -l | tr -d ' ')
+  [[ -d "$HOME/.claude/projects" ]] \
+    && project_count=$(find "$HOME/.claude/projects" -mindepth 1 -maxdepth 1 -type d 2> /dev/null | wc -l | tr -d ' ')
+
+  jq -n \
+    --arg acct "$account_uuid" \
+    --arg org "$org_uuid" \
+    --arg firstStart "$first_start" \
+    --argjson flags "$enabled_flags" \
+    --argjson skills "$skills_count" \
+    --argjson projects "$project_count" \
+    --arg cwd "$session_cwd" \
+    --arg startedAt "$session_started_at" \
+    --arg kind "$session_kind" \
+    '{accountUuid: $acct, orgUuid: $org, firstStartTime: $firstStart,
+      enabledFlags: $flags, skillsCount: $skills, projectCount: $projects,
+      session: {cwd: $cwd, startedAt: $startedAt, kind: $kind}}'
+}
+
+# ── Internal: collect GitHub Copilot data ────────────────────────────────────
+# Extend this function as Copilot's CLI surface grows.
+_ai_sync_collect_github_copilot() {
+  local gh_version copilot_version auth_user rate_remaining=""
+
+  gh_version=$(gh --version 2> /dev/null | head -1 | awk '{print $3}')
+
+  copilot_version=""
+  if gh extension list 2> /dev/null | grep -q "copilot"; then
+    copilot_version=$(gh copilot --version 2> /dev/null | head -1 || echo "")
+  fi
+
+  auth_user=$(gh api /user --jq '.login' 2> /dev/null || echo "")
+
+  if [[ -n "$auth_user" ]]; then
+    rate_remaining=$(gh api /rate_limit --jq '.rate.remaining' 2> /dev/null || echo "")
+  fi
+
+  jq -n \
+    --arg ghVersion "$gh_version" \
+    --arg copilotVersion "$copilot_version" \
+    --arg authUser "$auth_user" \
+    --arg rateRemaining "$rate_remaining" \
+    '{ghCliVersion: $ghVersion, copilotExtensionVersion: $copilotVersion,
+      authenticatedUser: $authUser, apiRateRemaining: $rateRemaining}'
+}
 
 # Edit hosts file with vi and sudo, using correct path for OS
 edithosts() {

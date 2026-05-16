@@ -2,6 +2,10 @@
 # Environment Variables & Path Configuration
 # ============================================
 
+# Forgehelm AI sync (override in ~/.zsh_secrets)
+export FORGEHELM_API_URL="${FORGEHELM_API_URL:-http://localhost:4000/graphql}"
+export FORGEHELM_API_TOKEN="${FORGEHELM_API_TOKEN:-}"
+
 # Core Environment
 export KUBECONFIG="${HOME}/.kube/config"
 export HOST_FILE=/etc/hosts

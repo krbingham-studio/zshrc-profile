@@ -24,3 +24,12 @@
 | 12:52 | Session end: 8 writes across 6 files (.gitignore, settings.json, SKILL.md, shell-reviewer.md, functions.zsh) | 6 reads | ~8487 tok |
 | 13:02 | Edited config/functions.zsh | inline fix | ~35 |
 | 13:02 | Session end: 9 writes across 6 files (.gitignore, settings.json, SKILL.md, shell-reviewer.md, functions.zsh) | 6 reads | ~11952 tok |
+
+## Session: 2026-05-16
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 14:00 | Added ai-sync multi-tool function + helpers | config/functions.zsh | claude-code + github-copilot support, extensible | ~400 |
+| 14:00 | Added FORGEHELM_API_URL/TOKEN env vars | config/exports.zsh | defaults to localhost:4000 | ~30 |
+| 14:00 | Added aisync/aisynca/ccsync/ghsync aliases | config/aliases.zsh | ai-sync shortcuts | ~50 |
+| 14:30 | Fixed CI failures on PR #5 | config/functions.zsh, config/aliases.zsh | SC2012: replaced ls -d with find; inline disable for ls -t; Prettier formatting applied | ~200 |
