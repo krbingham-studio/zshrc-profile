@@ -6,6 +6,7 @@
     </div>
     <div class="card-type">
       <span class="type-badge">{{ server.type }}</span>
+      <span v-if="showSource && server.source" class="source-badge">{{ server.source }}</span>
     </div>
     <div
       v-if="server.url || server.command"
@@ -21,7 +22,10 @@
 import { ref } from 'vue'
 import StatusBadge from './StatusBadge.vue'
 
-const props = defineProps({ server: { type: Object, required: true } })
+const props = defineProps({
+  server: { type: Object, required: true },
+  showSource: { type: Boolean, default: false },
+})
 const copied = ref(false)
 
 function handleCopy() {

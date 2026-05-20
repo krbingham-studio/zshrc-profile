@@ -6,7 +6,8 @@ import { execSync } from 'child_process'
 const HOME = homedir()
 const IS_MAC = platform() === 'darwin'
 
-// VS Code stores extensions and settings in different locations per platform
+const COPILOT_HOME = process.env.COPILOT_HOME ?? join(HOME, '.copilot')
+
 const VSCODE_EXTENSIONS_DIR = IS_MAC
   ? join(HOME, '.vscode', 'extensions')
   : join(HOME, '.vscode-server', 'extensions')
@@ -15,7 +16,6 @@ const VSCODE_SETTINGS_DIR = IS_MAC
   ? join(HOME, 'Library', 'Application Support', 'Code', 'User')
   : join(HOME, '.config', 'Code', 'User')
 
-// Common git root locations across platforms
 const GIT_ROOTS = [
   join(HOME, 'Git'),
   join(HOME, 'Developer'),
@@ -26,7 +26,6 @@ const GIT_ROOTS = [
 
 function readJson(path) {
   try {
-    // Strip single-line comments before parsing (config.json has a // header)
     const raw = readFileSync(path, 'utf8').replace(/^\s*\/\/.*$/mg, '')
     return JSON.parse(raw)
   } catch {
@@ -35,7 +34,7 @@ function readJson(path) {
 }
 
 function readAccount() {
-  const cfg = readJson(join(HOME, '.copilot', 'config.json'))
+  const cfg = readJson(join(COPILOT_HOME, 'config.json'))
   if (!cfg) return null
   return {
     firstLaunchAt: cfg.firstLaunchAt ?? null,
@@ -43,30 +42,40 @@ function readAccount() {
   }
 }
 
-function readMcpServers() {
-  const mcpPath = join(VSCODE_SETTINGS_DIR, 'mcp.json')
-  const mcp = readJson(mcpPath)
-  if (!mcp?.servers) return []
-
-  return Object.entries(mcp.servers).map(([name, cfg]) => ({
+function readCliMcpServers() {
+  const cfg = readJson(join(COPILOT_HOME, 'mcp-config.json'))
+  if (!cfg?.mcpServers) return []
+  return Object.entries(cfg.mcpServers).map(([name, s]) => ({
     name,
-    type: cfg.url ? (cfg.url.includes('sse') ? 'sse' : 'http') : 'command',
-    url: cfg.url ?? null,
-    command: cfg.command ? [cfg.command, ...(cfg.args ?? [])].join(' ') : null,
+    type: s.url ? (s.url.includes('sse') ? 'sse' : 'http') : 'command',
+    url: s.url ?? null,
+    command: s.command ? [s.command, ...(s.args ?? [])].join(' ') : null,
     authStatus: 'unknown',
+    source: 'cli',
+  }))
+}
+
+function readVscodeMcpServers() {
+  const cfg = readJson(join(VSCODE_SETTINGS_DIR, 'mcp.json'))
+  if (!cfg?.servers) return []
+  return Object.entries(cfg.servers).map(([name, s]) => ({
+    name,
+    type: s.url ? (s.url.includes('sse') ? 'sse' : 'http') : 'command',
+    url: s.url ?? null,
+    command: s.command ? [s.command, ...(s.args ?? [])].join(' ') : null,
+    authStatus: 'unknown',
+    source: 'vscode',
   }))
 }
 
 function readExtensions() {
-  const extensionsDir = VSCODE_EXTENSIONS_DIR
-  if (!existsSync(extensionsDir)) return []
-
+  if (!existsSync(VSCODE_EXTENSIONS_DIR)) return []
   const seen = new Set()
   const results = []
   try {
-    for (const entry of readdirSync(extensionsDir)) {
+    for (const entry of readdirSync(VSCODE_EXTENSIONS_DIR)) {
       if (!entry.startsWith('github.copilot')) continue
-      const pkg = readJson(join(extensionsDir, entry, 'package.json'))
+      const pkg = readJson(join(VSCODE_EXTENSIONS_DIR, entry, 'package.json'))
       if (!pkg?.version || seen.has(pkg.version)) continue
       seen.add(pkg.version)
       results.push({ name: entry.replace(/-[\d.]+$/, ''), version: pkg.version })
@@ -75,16 +84,52 @@ function readExtensions() {
   return results.sort((a, b) => b.version.localeCompare(a.version, undefined, { numeric: true }))
 }
 
+function readDirNames(dir) {
+  if (!existsSync(dir)) return []
+  try {
+    return readdirSync(dir).filter(f => !f.startsWith('.'))
+  } catch {
+    return []
+  }
+}
+
+function readAgents() {
+  const dir = join(COPILOT_HOME, 'agents')
+  if (!existsSync(dir)) return []
+  try {
+    return readdirSync(dir, { withFileTypes: true })
+      .filter(e => e.isFile() && (e.name.endsWith('.md') || e.name.endsWith('.json')))
+      .map(e => {
+        const content = readFileSync(join(dir, e.name), 'utf8')
+        const name = e.name.replace(/\.(md|json)$/, '')
+        const lines = content.split('\n').filter(l => l.trim() && !l.startsWith('---') && !l.startsWith('#!'))
+        const description = lines.find(l => !l.startsWith('#'))?.trim() ?? ''
+        return { name, description, body: content.slice(0, 800) }
+      })
+  } catch {
+    return []
+  }
+}
+
+function readPlugins() {
+  const dir = join(COPILOT_HOME, 'installed-plugins')
+  if (!existsSync(dir)) return []
+  try {
+    return readdirSync(dir, { withFileTypes: true })
+      .filter(e => e.isFile() || e.isDirectory())
+      .map(e => ({ name: e.name.replace(/\.(json|md)$/, ''), version: null, updatedAt: null }))
+  } catch {
+    return []
+  }
+}
+
 function readCli() {
-  // brew install copilot-cli installs binary named 'copilot'
-  // Output: "GitHub Copilot CLI 1.0.49."
   try {
     const out = execSync('copilot --version 2>/dev/null', { encoding: 'utf8', timeout: 3000 })
     const match = out.match(/(\d+\.\d+\.\d+)/)
     if (match) return { installed: true, version: match[1], source: 'brew' }
   } catch { /* not installed via brew */ }
 
-  // Fall back to gh extension
   try {
     const output = execSync('gh extension list 2>/dev/null', { encoding: 'utf8', timeout: 5000 })
     const line = output.split('\n').find(l => l.toLowerCase().includes('copilot'))
@@ -124,11 +169,14 @@ function readInstructions() {
 export function getGithubCopilotData() {
   const extensions = readExtensions()
   const cli = readCli()
+  const mcpServers = [...readCliMcpServers(), ...readVscodeMcpServers()]
   return {
     account: readAccount(),
-    mcpServers: readMcpServers(),
+    mcpServers,
     extensions,
-    skills: [],
+    skills: readDirNames(join(COPILOT_HOME, 'skills')),
+    agents: readAgents(),
+    plugins: readPlugins(),
     instructions: readInstructions(),
     cli,
     installed: extensions.length > 0 || cli.installed,

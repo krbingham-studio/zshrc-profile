@@ -160,3 +160,8 @@
 | 11:44 | Edited dashboard/server/readers/github-copilot.js | modified readMcpServers() | ~24 |
 | 11:44 | Edited dashboard/server/readers/github-copilot.js | modified readInstructions() | ~279 |
 | 11:44 | Session end: 21 writes across 6 files (functions.zsh, github-copilot.js, App.vue, index.js, package.json) | 8 reads | ~21157 tok |
+| 11:52 | Created dashboard/server/readers/github-copilot.js | — | ~1727 |
+| 11:52 | Edited dashboard/src/App.vue | expanded (+24 lines) | ~871 |
+| 11:52 | Edited dashboard/src/components/McpServerCard.vue | 7→8 lines | ~90 |
+| 11:52 | Edited dashboard/src/components/McpServerCard.vue | CSS: showSource, default | ~33 |
+| 11:53 | Session end: 25 writes across 7 files (functions.zsh, github-copilot.js, App.vue, index.js, package.json) | 9 reads | ~24964 tok |

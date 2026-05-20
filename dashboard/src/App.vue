@@ -155,12 +155,24 @@
               <span class="section-count">{{ copilot.mcpServers.length }}</span>
             </div>
             <div class="card-grid" v-if="copilot.mcpServers.length">
-              <McpServerCard v-for="s in copilot.mcpServers" :key="s.name" :server="s" />
+              <McpServerCard v-for="s in copilot.mcpServers" :key="s.source + s.name" :server="s" :show-source="true" />
             </div>
             <div v-else class="empty">No MCP servers configured</div>
           </div>
 
-          <!-- Extensions (like Plugins) -->
+          <!-- Plugins (CLI installed-plugins) -->
+          <div class="section-block">
+            <div class="section-head sticky-head">
+              <span class="section-label">Plugins</span>
+              <span class="section-count">{{ copilot.plugins.length }}</span>
+            </div>
+            <div class="two-col-grid" v-if="copilot.plugins.length">
+              <PluginCard v-for="p in copilot.plugins" :key="p.name" :plugin="p" />
+            </div>
+            <div v-else class="empty">No plugins installed</div>
+          </div>
+
+          <!-- Extensions (VS Code) -->
           <div class="section-block">
             <div class="section-head sticky-head">
               <span class="section-label">Extensions</span>
@@ -169,7 +181,7 @@
             <div class="two-col-grid" v-if="copilot.extensions.length">
               <PluginCard v-for="e in copilot.extensions" :key="e.name + e.version" :plugin="e" />
             </div>
-            <div v-else class="empty">No extensions found</div>
+            <div v-else class="empty">No VS Code extensions found</div>
           </div>
 
           <!-- Skills -->
@@ -182,7 +194,19 @@
             <div v-if="!copilot.skills.length" class="empty">No skills configured</div>
           </div>
 
-          <!-- Instructions (per-project copilot-instructions.md = agents equivalent) -->
+          <!-- Agents (CLI agents/) -->
+          <div class="section-block">
+            <div class="section-head sticky-head">
+              <span class="section-label">Agents</span>
+              <span class="section-count">{{ copilot.agents.length }}</span>
+            </div>
+            <div class="two-col-grid" v-if="copilot.agents.length">
+              <AgentCard v-for="a in copilot.agents" :key="a.name" :agent="a" />
+            </div>
+            <div v-else class="empty">No agents configured</div>
+          </div>
+
+          <!-- Project Instructions (copilot-instructions.md per repo) -->
           <div class="section-block">
             <div class="section-head sticky-head">
               <span class="section-label">Project Instructions</span>
