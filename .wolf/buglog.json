@@ -323,6 +323,54 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-20T10:52:22.957Z"
+    },
+    {
+      "id": "bug-021",
+      "timestamp": "2026-05-20T10:57:38.229Z",
+      "error_message": "Null/undefined access in ",
+      "file": "dashboard/server/readers/claude-code.js",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T10:57:38.229Z"
+    },
+    {
+      "id": "bug-022",
+      "timestamp": "2026-05-20T10:58:05.850Z",
+      "error_message": "Significant refactor of ",
+      "file": "dashboard/src/App.vue",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 9→11 lines (2 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "vue"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T10:58:05.850Z"
+    },
+    {
+      "id": "bug-023",
+      "timestamp": "2026-05-20T10:58:42.653Z",
+      "error_message": "Missing error handling in readSkillsFromDir",
+      "file": "dashboard/server/readers/claude-code.js",
+      "root_cause": "Code path had no error handling — exceptions would propagate uncaught",
+      "fix": "Added try/catch block",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T10:58:42.653Z"
     }
   ]
 }

@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-20T10:52:38.533Z
-> Files: 48 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-20T10:58:42.645Z
+> Files: 49 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../.claude/agents/
 
@@ -75,7 +75,7 @@
 
 ## dashboard/server/readers/
 
-- `claude-code.js` — Exports getClaudeCodeData (~1257 tok)
+- `claude-code.js` — Exports getClaudeCodeData (~1598 tok)
 - `codex.js` — Exports getCodexData (~196 tok)
 - `github-copilot.js` — Exports getGithubCopilotData (~1727 tok)
 - `system.js` — Exports getSystemData (~568 tok)
@@ -84,7 +84,7 @@
 ## dashboard/src/
 
 - `api.js` — Exports fetchClaudeCode, fetchGithubCopilot, fetchCodex, fetchSystem, fetchZshProfile (~248 tok)
-- `App.vue` — Vue component (~8612 tok)
+- `App.vue` — Vue component (~8696 tok)
 - `main.js` (~26 tok)
 
 ## dashboard/src/components/
@@ -92,6 +92,7 @@
 - `AgentCard.vue` — Vue: setup (~651 tok)
 - `McpServerCard.vue` — Vue: setup (~703 tok)
 - `PluginCard.vue` — Vue: setup (~444 tok)
+- `SkillCard.vue` — Vue: setup (~458 tok)
 - `SkillList.vue` — Vue: setup (~303 tok)
 - `StatusBadge.vue` — Vue: setup (~474 tok)
 

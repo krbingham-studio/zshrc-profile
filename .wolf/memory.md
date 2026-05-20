@@ -165,3 +165,11 @@
 | 11:52 | Edited dashboard/src/components/McpServerCard.vue | 7→8 lines | ~90 |
 | 11:52 | Edited dashboard/src/components/McpServerCard.vue | CSS: showSource, default | ~33 |
 | 11:53 | Session end: 25 writes across 7 files (functions.zsh, github-copilot.js, App.vue, index.js, package.json) | 9 reads | ~24964 tok |
+| 11:57 | Edited dashboard/server/readers/claude-code.js | added nullish coalescing | ~159 |
+| 11:57 | Created dashboard/src/components/SkillCard.vue | — | ~458 |
+| 11:57 | Edited dashboard/src/App.vue | 5→5 lines | ~72 |
+| 11:57 | Edited dashboard/src/App.vue | 8→11 lines | ~137 |
+| 11:58 | Edited dashboard/src/App.vue | CSS: name, description, body | ~148 |
+| 11:58 | Edited dashboard/server/readers/claude-code.js | expanded (+10 lines) | ~117 |
+| 11:58 | Edited dashboard/server/readers/claude-code.js | added error handling | ~321 |
+| 11:58 | Session end: 32 writes across 9 files (functions.zsh, github-copilot.js, App.vue, index.js, package.json) | 10 reads | ~27691 tok |

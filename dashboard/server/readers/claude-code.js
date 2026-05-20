@@ -2,7 +2,17 @@ import { readFileSync, readdirSync, existsSync } from 'fs'
 import { join } from 'path'
 import { homedir } from 'os'
 
-const CLAUDE_DIR = join(homedir(), '.claude')
+const HOME = homedir()
+const CLAUDE_DIR = join(HOME, '.claude')
+
+// Common git root locations (same as copilot reader)
+const GIT_ROOTS = [
+  join(HOME, 'Git'),
+  join(HOME, 'Developer'),
+  join(HOME, 'Projects'),
+  join(HOME, 'code'),
+  join(HOME, 'Documents', 'GitHub'),
+].filter(existsSync)
 
 function readJson(path) {
   try {
@@ -103,10 +113,41 @@ async function readMcpServers() {
   return servers
 }
 
+function readSkillsFromDir(dir) {
+  if (!existsSync(dir)) return []
+  return listDir(dir)
+    .filter(f => !f.startsWith('.'))
+    .map(f => {
+      const skillFile = join(dir, f, 'SKILL.md')
+      if (!existsSync(skillFile)) return { name: f, description: null, body: null }
+      const raw = readFileSync(skillFile, 'utf8')
+      const { meta, body } = parseFrontmatter(raw)
+      return { name: meta.name ?? f, description: meta.description ?? null, body }
+    })
+}
+
 function readSkills() {
-  const skillsDir = join(CLAUDE_DIR, 'skills')
-  if (!existsSync(skillsDir)) return []
-  return listDir(skillsDir).filter(f => !f.startsWith('.'))
+  const seen = new Set()
+  const skills = []
+
+  // Global skills (~/.claude/skills/)
+  for (const s of readSkillsFromDir(join(CLAUDE_DIR, 'skills'))) {
+    if (!seen.has(s.name)) { seen.add(s.name); skills.push(s) }
+  }
+
+  // Project-local skills (scan repos for .claude/skills/)
+  for (const root of GIT_ROOTS) {
+    try {
+      for (const repo of readdirSync(root)) {
+        const skillsDir = join(root, repo, '.claude', 'skills')
+        for (const s of readSkillsFromDir(skillsDir)) {
+          if (!seen.has(s.name)) { seen.add(s.name); skills.push(s) }
+        }
+      }
+    } catch { /* skip */ }
+  }
+
+  return skills
 }
 
 function parseFrontmatter(content) {

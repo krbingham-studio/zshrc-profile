@@ -114,7 +114,10 @@
               <span class="section-label">Skills</span>
               <span class="section-count">{{ claude.skills.length }}</span>
             </div>
-            <SkillList :items="claude.skills" />
+            <div class="two-col-grid" v-if="claude.skills.length">
+              <SkillCard v-for="s in claude.skills" :key="s.name" :skill="s" />
+            </div>
+            <div v-else class="empty">No skills configured</div>
           </div>
 
           <!-- Agents -->
@@ -190,8 +193,10 @@
               <span class="section-label">Skills</span>
               <span class="section-count">{{ copilot.skills.length }}</span>
             </div>
-            <SkillList :items="copilot.skills" />
-            <div v-if="!copilot.skills.length" class="empty">No skills configured</div>
+            <div class="two-col-grid" v-if="copilot.skills.length">
+              <SkillCard v-for="s in copilot.skills" :key="s" :skill="{ name: s, description: null, body: null }" />
+            </div>
+            <div v-else class="empty">No skills configured</div>
           </div>
 
           <!-- Agents (CLI agents/) -->
@@ -338,7 +343,7 @@ import { fetchClaudeCode, fetchGithubCopilot, fetchCodex, fetchSystem, fetchZshP
 import StatusBadge from './components/StatusBadge.vue'
 import McpServerCard from './components/McpServerCard.vue'
 import PluginCard from './components/PluginCard.vue'
-import SkillList from './components/SkillList.vue'
+import SkillCard from './components/SkillCard.vue'
 import AgentCard from './components/AgentCard.vue'
 
 const ACCENT = '#F57F2F'
