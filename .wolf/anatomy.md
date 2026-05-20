@@ -1,12 +1,22 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-04-29T12:02:27.902Z
-> Files: 26 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-20T10:25:53.949Z
+> Files: 47 tracked | Anatomy hits: 0 | Misses: 0
+
+## ../../.claude/agents/
+
+- `code-reviewer.md` — Review priorities (highest to lowest) (~829 tok)
+- `qa-engineer.md` — Testing philosophy (~654 tok)
+- `senior-dev.md` — How you work (~555 tok)
+
+## ../../.claude/plans/
+
+- `i-want-to-setup-enchanted-church.md` — Plan: Local AI Tools Dashboard (~1283 tok)
 
 ## ./
 
 - `.editorconfig` — Editor configuration (~54 tok)
-- `.gitignore` — Git ignore rules (~145 tok)
+- `.gitignore` — Git ignore rules (~156 tok)
 - `.nvmrc` (~1 tok)
 - `.prettierignore` (~10 tok)
 - `.prettierrc` — Prettier configuration (~71 tok)
@@ -46,11 +56,43 @@
 
 - `aliases.zsh` — Aliases + ai-sync shortcuts (aisync/aisynca/ccsync/ghsync) (~1720 tok)
 - `exports.zsh` — Environment Variables, Path Config, FORGEHELM_API_URL/TOKEN (~1200 tok)
-- `functions.zsh` — Shell functions including ai-sync (multi-tool AI data sync to Forgehelm) (~4200 tok)
+- `functions.zsh` — ============================================ (~5285 tok)
 - `git.zsh` — Git-Specific Functions & Aliases (~1596 tok)
 - `linux.zsh` — Linux-specific configuration (~209 tok)
 - `linux.zsh.local` (~30 tok)
 - `macos.zsh` — macOS-specific configuration (~84 tok)
+
+## dashboard/
+
+- `index.html` — AI Dev Dashboard (~163 tok)
+- `package.json` — Node.js package manifest (~138 tok)
+- `vite.config.js` (~97 tok)
+
+## dashboard/server/
+
+- `index.js` — API routes: GET (5 endpoints) (~378 tok)
+
+## dashboard/server/readers/
+
+- `claude-code.js` — Exports getClaudeCodeData (~1257 tok)
+- `codex.js` — Exports getCodexData (~196 tok)
+- `github-copilot.js` — Exports getGithubCopilotData (~509 tok)
+- `system.js` — Exports getSystemData (~568 tok)
+- `zsh-profile.js` — Exports getZshProfileData (~962 tok)
+
+## dashboard/src/
+
+- `api.js` — Exports fetchClaudeCode, fetchGithubCopilot, fetchCodex, fetchSystem, fetchZshProfile (~248 tok)
+- `App.vue` — Vue: setup (~7735 tok)
+- `main.js` (~26 tok)
+
+## dashboard/src/components/
+
+- `AgentCard.vue` — Vue: setup (~651 tok)
+- `McpServerCard.vue` — Vue: setup (~664 tok)
+- `PluginCard.vue` — Vue: setup (~444 tok)
+- `SkillList.vue` — Vue: setup (~303 tok)
+- `StatusBadge.vue` — Vue: setup (~474 tok)
 
 ## hooks/
 

@@ -672,6 +672,19 @@ _ai_sync_collect_github_copilot() {
       authenticatedUser: $authUser, apiRateRemaining: $rateRemaining}'
 }
 
+# Launch the AI Tools Dashboard (Vite + Express) from anywhere
+ai-dashboard() {
+  local dashboard_dir="${ZSHRC_DIR:-$HOME/Git/zshrc-profile}/dashboard"
+
+  if [[ ! -d "$dashboard_dir" ]]; then
+    echo "ai-dashboard: dashboard not found at $dashboard_dir" >&2
+    return 1
+  fi
+
+  echo "Starting AI Dashboard → http://localhost:5173"
+  (cd "$dashboard_dir" && pnpm dev)
+}
+
 # Edit hosts file with vi and sudo, using correct path for OS
 edithosts() {
   local hosts_file=""

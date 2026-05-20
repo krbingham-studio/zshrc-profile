@@ -13,6 +13,9 @@ config/linux.zsh.local
 # Node.js
 node_modules/
 
+# Dashboard build output
+dashboard/dist/
+
 # OpenWolf runtime/generated files (not project knowledge)
 .wolf/daemon.log
 .wolf/token-ledger.json

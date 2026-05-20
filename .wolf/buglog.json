@@ -16,18 +16,185 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-04-29T12:02:27.910Z"
-    }
-  ,{
+    },
+    {
       "id": "bug-002",
       "timestamp": "2026-05-16T14:00:00.000Z",
       "error_message": "CI ShellCheck SC2012 + Prettier formatting failures on PR #5",
       "file": "config/functions.zsh",
       "root_cause": "New ai-sync code used `ls -d .../*/` pipes for directory counting (SC2012) and `ls -t *.json | head -1` for mtime sort (SC2012). Prettier also reformatted 2>/dev/null spacing and case statement layout.",
       "fix": "Replaced ls -d directory counts with `find -mindepth 1 -maxdepth 1 -type d`. Added inline `# shellcheck disable=SC2012` for ls -t mtime sort. Ran `pnpm format` to apply Prettier fixes.",
-      "tags": ["shellcheck", "sc2012", "prettier", "ci", "lint", "zsh"],
+      "tags": [
+        "shellcheck",
+        "sc2012",
+        "prettier",
+        "ci",
+        "lint",
+        "zsh"
+      ],
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-16T14:00:00.000Z"
+    },
+    {
+      "id": "bug-003",
+      "timestamp": "2026-05-20T09:12:37.075Z",
+      "error_message": "Null/undefined access in ",
+      "file": "dashboard/server/readers/claude-code.js",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T09:12:37.075Z"
+    },
+    {
+      "id": "bug-004",
+      "timestamp": "2026-05-20T09:15:59.284Z",
+      "error_message": "CSS fix: background, border, color",
+      "file": "dashboard/src/components/McpServerCard.vue",
+      "root_cause": "background: #f9fafb → #21262d; border: 1px solid #e5e7eb → 1px solid #30363d; color: #374151 → #c9d1d9",
+      "fix": "Changed background: #f9fafb → #21262d; border: 1px solid #e5e7eb → 1px solid #30363d; color: #374151 → #c9d1d9",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "vue"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T09:15:59.284Z"
+    },
+    {
+      "id": "bug-005",
+      "timestamp": "2026-05-20T09:16:12.879Z",
+      "error_message": "CSS fix: background, border, color",
+      "file": "dashboard/src/components/PluginCard.vue",
+      "root_cause": "background: #f3f4f6 → #21262d; border: 1px solid #e5e7eb → 1px solid #30363d; color: #9ca3af → #6e7681",
+      "fix": "Changed background: #f3f4f6 → #21262d; border: 1px solid #e5e7eb → 1px solid #30363d; color: #9ca3af → #6e7681",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "vue"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-05-20T09:18:08.955Z"
+    },
+    {
+      "id": "bug-006",
+      "timestamp": "2026-05-20T09:16:18.569Z",
+      "error_message": "CSS fix: background, color, border",
+      "file": "dashboard/src/components/SkillList.vue",
+      "root_cause": "background: #eff6ff → #1c2b3a; color: #9ca3af → #6e7681; border: 1px solid #bfdbfe → 1px solid #1f4068",
+      "fix": "Changed background: #eff6ff → #1c2b3a; color: #9ca3af → #6e7681; border: 1px solid #bfdbfe → 1px solid #1f4068",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "vue"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T09:16:18.569Z"
+    },
+    {
+      "id": "bug-007",
+      "timestamp": "2026-05-20T09:16:28.315Z",
+      "error_message": "CSS fix: color, toggle",
+      "file": "dashboard/src/components/AgentCard.vue",
+      "root_cause": "color: #6b7280 → #6e7681; toggle: hover { color: #111827 → hover { color: #e6edf3",
+      "fix": "Changed color: #6b7280 → #6e7681; toggle: hover { color: #111827 → hover { color: #e6edf3",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "vue"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T09:16:28.315Z"
+    },
+    {
+      "id": "bug-008",
+      "timestamp": "2026-05-20T09:16:36.380Z",
+      "error_message": "CSS fix: background, color",
+      "file": "dashboard/src/components/StatusBadge.vue",
+      "root_cause": "background: #ede9fe → #1e1b3a; color: #5b21b6 → #bc8cff",
+      "fix": "Changed background: #ede9fe → #1e1b3a; color: #5b21b6 → #bc8cff",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "vue"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T09:16:36.380Z"
+    },
+    {
+      "id": "bug-009",
+      "timestamp": "2026-05-20T09:17:57.522Z",
+      "error_message": "CSS fix: grid-template-columns",
+      "file": "dashboard/src/App.vue",
+      "root_cause": "grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) → repeat(2, 1fr)",
+      "fix": "Changed grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) → repeat(2, 1fr)",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "vue"
+      ],
+      "related_bugs": [],
+      "occurrences": 4,
+      "last_seen": "2026-05-20T09:22:50.759Z"
+    },
+    {
+      "id": "bug-010",
+      "timestamp": "2026-05-20T09:20:25.487Z",
+      "error_message": "Incorrect value in code",
+      "file": "dashboard/src/App.vue",
+      "root_cause": "Had \"card-grid\"",
+      "fix": "Changed to \"grid\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "vue"
+      ],
+      "related_bugs": [],
+      "occurrences": 6,
+      "last_seen": "2026-05-20T09:21:23.611Z"
+    },
+    {
+      "id": "bug-011",
+      "timestamp": "2026-05-20T09:54:14.156Z",
+      "error_message": "CSS fix: id",
+      "file": "dashboard/src/App.vue",
+      "root_cause": "id: 'system', label: 'System' → 'zsh', label: 'ZSH Profile'",
+      "fix": "Changed id: 'system', label: 'System' → 'zsh', label: 'ZSH Profile'",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "vue"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T09:54:14.156Z"
+    },
+    {
+      "id": "bug-012",
+      "timestamp": "2026-05-20T10:25:53.957Z",
+      "error_message": "Significant refactor of ",
+      "file": "config/functions.zsh",
+      "root_cause": "6 lines replaced/restructured",
+      "fix": "Rewrote 18→12 lines (6 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "zsh"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T10:25:53.957Z"
     }
   ]
 }
