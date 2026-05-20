@@ -52,6 +52,17 @@ app.get('/api/zsh-profile', (req, res) => {
   }
 })
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`API server running at http://localhost:${PORT}`)
 })
+
+server.on('error', err => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} already in use. Kill the existing process and retry.`)
+    process.exit(1)
+  }
+  throw err
+})
+
+process.on('SIGTERM', () => server.close())
+process.on('SIGINT', () => server.close())

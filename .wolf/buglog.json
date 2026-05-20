@@ -195,6 +195,118 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-20T10:25:53.957Z"
+    },
+    {
+      "id": "bug-013",
+      "timestamp": "2026-05-20T10:32:17.122Z",
+      "error_message": "Significant refactor of ",
+      "file": "dashboard/server/readers/github-copilot.js",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 11→18 lines (3 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T10:32:17.122Z"
+    },
+    {
+      "id": "bug-014",
+      "timestamp": "2026-05-20T10:32:28.665Z",
+      "error_message": "Significant refactor of ",
+      "file": "dashboard/src/App.vue",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 8→9 lines (2 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "vue"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T10:32:28.665Z"
+    },
+    {
+      "id": "bug-015",
+      "timestamp": "2026-05-20T10:34:55.163Z",
+      "error_message": "Incorrect value in code",
+      "file": "dashboard/package.json",
+      "root_cause": "Had \"concurrently \\\"",
+      "fix": "Changed to \"fuser -k 3001/tcp 2>/dev/null; concurrently \\\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "json"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T10:34:55.163Z"
+    },
+    {
+      "id": "bug-016",
+      "timestamp": "2026-05-20T10:35:02.187Z",
+      "error_message": "Wrong condition in logic",
+      "file": "dashboard/server/readers/github-copilot.js",
+      "root_cause": "Condition was: if (ver)",
+      "fix": "Changed to: if (match)",
+      "tags": [
+        "auto-detected",
+        "logic-fix",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T10:35:02.187Z"
+    },
+    {
+      "id": "bug-017",
+      "timestamp": "2026-05-20T10:40:17.257Z",
+      "error_message": "Null/undefined access in ",
+      "file": "dashboard/src/App.vue",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check) | Also: { id: 'claude',  label: 'Claude Code',    icon: 'cpu',      ; { id: 'copilot', label: 'GitHub Copilot', icon: 'github',    | Also: // If active tab is now hidden, jump to first visible tab; if (!visibleTabs.value.find(t => t.id === activeTab.value)) ",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "vue"
+      ],
+      "related_bugs": [],
+      "occurrences": 3,
+      "last_seen": "2026-05-20T10:42:30.832Z"
+    },
+    {
+      "id": "bug-018",
+      "timestamp": "2026-05-20T10:44:01.415Z",
+      "error_message": "Incorrect value in code",
+      "file": "dashboard/package.json",
+      "root_cause": "Had \"fuser -k 3001/tcp 2>/dev/null; concurrently \\\"",
+      "fix": "Changed to \"node server/kill-port.js 3001 && concurrently \\\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "json"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T10:44:01.415Z"
+    },
+    {
+      "id": "bug-019",
+      "timestamp": "2026-05-20T10:44:21.006Z",
+      "error_message": "Incorrect value in code",
+      "file": "dashboard/server/readers/github-copilot.js",
+      "root_cause": "Had '.config'",
+      "fix": "Changed to 'mcp.json'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T10:44:21.006Z"
     }
   ]
 }

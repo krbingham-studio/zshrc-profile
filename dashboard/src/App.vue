@@ -33,7 +33,7 @@
     <!-- Tab nav -->
     <nav class="tabs">
       <button
-        v-for="tab in tabs"
+        v-for="tab in visibleTabs"
         :key="tab.id"
         class="tab"
         :class="{ active: activeTab === tab.id }"
@@ -135,25 +135,63 @@
       <section v-if="activeTab === 'copilot'" class="tool-section">
         <div v-if="!copilot" class="loading-state">Loading…</div>
         <template v-else>
+          <!-- Account bar -->
+          <div class="account-bar" v-if="copilot.account">
+            <iconify-icon icon="lucide:github" width="15" height="15" style="color:var(--fh-fg-subtle);flex-shrink:0" />
+            <span class="account-name">GitHub Copilot</span>
+            <span class="account-expiry" v-if="copilot.account.firstLaunchAt">
+              first launch {{ formatDate(copilot.account.firstLaunchAt) }}
+            </span>
+            <span class="account-expiry" v-if="copilot.cli?.installed">
+              · CLI v{{ copilot.cli.version }}
+              <span class="source-badge" style="margin-left:4px">{{ copilot.cli.source }}</span>
+            </span>
+          </div>
+
+          <!-- MCP Servers -->
           <div class="section-block">
             <div class="section-head sticky-head">
-              <span class="section-label">VS Code Extensions</span>
+              <span class="section-label">MCP Servers</span>
+              <span class="section-count">{{ copilot.mcpServers.length }}</span>
             </div>
-            <div v-if="copilot.versions.length" class="two-col-grid">
-              <div v-for="v in copilot.versions" :key="v" class="simple-card dash-card">
-                <span class="simple-card-name">github.copilot</span>
-                <span class="version-pill">v{{ v }}</span>
-              </div>
+            <div class="card-grid" v-if="copilot.mcpServers.length">
+              <McpServerCard v-for="s in copilot.mcpServers" :key="s.name" :server="s" />
             </div>
-            <div v-else class="empty">No Copilot VS Code extensions found</div>
+            <div v-else class="empty">No MCP servers configured</div>
           </div>
-          <div class="section-block" v-if="copilot.cliExtension">
-            <div class="section-head sticky-head"><span class="section-label">CLI Extension</span></div>
-            <div class="simple-card dash-card">
-              <span class="simple-card-name">gh copilot</span>
-              <StatusBadge :status="copilot.cliExtension.installed ? 'installed' : 'not-installed'" />
-              <span class="version-pill" v-if="copilot.cliExtension.version">v{{ copilot.cliExtension.version }}</span>
+
+          <!-- Extensions (like Plugins) -->
+          <div class="section-block">
+            <div class="section-head sticky-head">
+              <span class="section-label">Extensions</span>
+              <span class="section-count">{{ copilot.extensions.length }}</span>
             </div>
+            <div class="two-col-grid" v-if="copilot.extensions.length">
+              <PluginCard v-for="e in copilot.extensions" :key="e.name + e.version" :plugin="e" />
+            </div>
+            <div v-else class="empty">No extensions found</div>
+          </div>
+
+          <!-- Skills -->
+          <div class="section-block">
+            <div class="section-head sticky-head">
+              <span class="section-label">Skills</span>
+              <span class="section-count">{{ copilot.skills.length }}</span>
+            </div>
+            <SkillList :items="copilot.skills" />
+            <div v-if="!copilot.skills.length" class="empty">No skills configured</div>
+          </div>
+
+          <!-- Instructions (per-project copilot-instructions.md = agents equivalent) -->
+          <div class="section-block">
+            <div class="section-head sticky-head">
+              <span class="section-label">Project Instructions</span>
+              <span class="section-count">{{ copilot.instructions.length }}</span>
+            </div>
+            <div class="two-col-grid" v-if="copilot.instructions.length">
+              <AgentCard v-for="a in copilot.instructions" :key="a.name" :agent="a" />
+            </div>
+            <div v-else class="empty">No copilot-instructions.md files found</div>
           </div>
         </template>
       </section>
@@ -283,12 +321,14 @@ const ACCENT = '#F57F2F'
 const accent = ref(ACCENT)
 
 const tabs = [
-  { id: 'claude',  label: 'Claude Code',    icon: 'cpu'        },
-  { id: 'copilot', label: 'GitHub Copilot', icon: 'github'     },
-  { id: 'codex',   label: 'Codex',          icon: 'box'        },
-  { id: 'system',  label: 'System',         icon: 'settings-2' },
-  { id: 'zsh',     label: 'ZSH Profile',    icon: 'terminal'   },
+  { id: 'claude',  label: 'Claude Code',    icon: 'cpu',        installed: () => !!claude.value },
+  { id: 'copilot', label: 'GitHub Copilot', icon: 'github',     installed: () => copilot.value?.installed ?? false },
+  { id: 'codex',   label: 'Codex',          icon: 'box',        installed: () => codex.value?.installed ?? false },
+  { id: 'system',  label: 'System',         icon: 'settings-2', installed: () => true },
+  { id: 'zsh',     label: 'ZSH Profile',    icon: 'terminal',   installed: () => true },
 ]
+
+const visibleTabs = computed(() => tabs.filter(t => t.installed()))
 
 const activeTab = ref('claude')
 const loading = ref(false)
@@ -335,7 +375,7 @@ function handleToastEvent(e) { showToast(e.detail) }
 
 function handleKeydown(e) {
   if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return
-  const ids = tabs.map(t => t.id)
+  const ids = visibleTabs.value.map(t => t.id)
   const i = ids.indexOf(activeTab.value)
   activeTab.value = e.key === 'ArrowRight'
     ? ids[(i + 1) % ids.length]
@@ -350,6 +390,10 @@ async function load() {
       fetchClaudeCode(), fetchGithubCopilot(), fetchCodex(), fetchSystem(), fetchZshProfile(),
     ])
     refreshedAt.value = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    // If active tab is now hidden, jump to first visible tab
+    if (!visibleTabs.value.find(t => t.id === activeTab.value)) {
+      activeTab.value = visibleTabs.value[0]?.id ?? 'claude'
+    }
   } catch (e) {
     error.value = e.message
   } finally {

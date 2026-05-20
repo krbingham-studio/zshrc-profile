@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"node server/index.js\" \"vite\"",
+    "dev": "node server/kill-port.js 3001 && concurrently \"node server/index.js\" \"vite\"",
     "build": "vite build",
     "preview": "vite preview",
     "server": "node server/index.js"

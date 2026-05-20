@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-20T10:25:53.949Z
-> Files: 47 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-20T10:44:31.733Z
+> Files: 48 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../.claude/agents/
 
@@ -65,25 +65,26 @@
 ## dashboard/
 
 - `index.html` — AI Dev Dashboard (~163 tok)
-- `package.json` — Node.js package manifest (~138 tok)
+- `package.json` — Node.js package manifest (~147 tok)
 - `vite.config.js` (~97 tok)
 
 ## dashboard/server/
 
-- `index.js` — API routes: GET (5 endpoints) (~378 tok)
+- `index.js` — API routes: GET (5 endpoints) (~462 tok)
+- `kill-port.js` — Declares PORT (~110 tok)
 
 ## dashboard/server/readers/
 
 - `claude-code.js` — Exports getClaudeCodeData (~1257 tok)
 - `codex.js` — Exports getCodexData (~196 tok)
-- `github-copilot.js` — Exports getGithubCopilotData (~509 tok)
+- `github-copilot.js` — Exports getGithubCopilotData (~1307 tok)
 - `system.js` — Exports getSystemData (~568 tok)
 - `zsh-profile.js` — Exports getZshProfileData (~962 tok)
 
 ## dashboard/src/
 
 - `api.js` — Exports fetchClaudeCode, fetchGithubCopilot, fetchCodex, fetchSystem, fetchZshProfile (~248 tok)
-- `App.vue` — Vue: setup (~7735 tok)
+- `App.vue` — Vue component (~8319 tok)
 - `main.js` (~26 tok)
 
 ## dashboard/src/components/
