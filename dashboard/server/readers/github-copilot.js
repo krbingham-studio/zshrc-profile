@@ -42,30 +42,47 @@ function readAccount() {
   }
 }
 
+const AUTH_KEY = /token|key|secret|password|auth|credential|bearer/i
+
+function inferAuthStatus(s) {
+  const type = s.url ? (s.url.includes('sse') ? 'sse' : 'http') : 'command'
+
+  // Local command servers don't require remote auth
+  if (type === 'command') return 'ok'
+
+  // HTTP/SSE: check if credentials are configured
+  const hasHeaderAuth = s.headers && Object.keys(s.headers).some(k => AUTH_KEY.test(k))
+  const hasEnvAuth = s.env && Object.values(s.env).some(v => typeof v === 'string' && v.length > 0)
+    && Object.keys(s.env).some(k => AUTH_KEY.test(k))
+
+  if (hasHeaderAuth || hasEnvAuth) return 'ok'
+
+  // Remote server with no credentials configured
+  return 'needs-auth'
+}
+
+function mcpServerShape(name, s, source) {
+  const type = s.url ? (s.url.includes('sse') ? 'sse' : 'http') : 'command'
+  return {
+    name,
+    type,
+    url: s.url ?? null,
+    command: s.command ? [s.command, ...(s.args ?? [])].join(' ') : null,
+    authStatus: inferAuthStatus(s),
+    source,
+  }
+}
+
 function readCliMcpServers() {
   const cfg = readJson(join(COPILOT_HOME, 'mcp-config.json'))
   if (!cfg?.mcpServers) return []
-  return Object.entries(cfg.mcpServers).map(([name, s]) => ({
-    name,
-    type: s.url ? (s.url.includes('sse') ? 'sse' : 'http') : 'command',
-    url: s.url ?? null,
-    command: s.command ? [s.command, ...(s.args ?? [])].join(' ') : null,
-    authStatus: 'unknown',
-    source: 'cli',
-  }))
+  return Object.entries(cfg.mcpServers).map(([name, s]) => mcpServerShape(name, s, 'cli'))
 }
 
 function readVscodeMcpServers() {
   const cfg = readJson(join(VSCODE_SETTINGS_DIR, 'mcp.json'))
   if (!cfg?.servers) return []
-  return Object.entries(cfg.servers).map(([name, s]) => ({
-    name,
-    type: s.url ? (s.url.includes('sse') ? 'sse' : 'http') : 'command',
-    url: s.url ?? null,
-    command: s.command ? [s.command, ...(s.args ?? [])].join(' ') : null,
-    authStatus: 'unknown',
-    source: 'vscode',
-  }))
+  return Object.entries(cfg.servers).map(([name, s]) => mcpServerShape(name, s, 'vscode'))
 }
 
 function readExtensions() {

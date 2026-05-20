@@ -417,8 +417,40 @@
         "vue"
       ],
       "related_bugs": [],
+      "occurrences": 7,
+      "last_seen": "2026-05-20T11:04:28.060Z"
+    },
+    {
+      "id": "bug-027",
+      "timestamp": "2026-05-20T11:04:03.946Z",
+      "error_message": "CSS fix: grid-template-columns",
+      "file": "dashboard/src/App.vue",
+      "root_cause": "grid-template-columns: repeat(2, 1fr) → repeat(4, 1fr)",
+      "fix": "Changed grid-template-columns: repeat(2, 1fr) → repeat(4, 1fr)",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "vue"
+      ],
+      "related_bugs": [],
       "occurrences": 1,
-      "last_seen": "2026-05-20T11:02:07.734Z"
+      "last_seen": "2026-05-20T11:04:03.946Z"
+    },
+    {
+      "id": "bug-028",
+      "timestamp": "2026-05-20T11:06:30.848Z",
+      "error_message": "Significant refactor of ",
+      "file": "dashboard/server/readers/github-copilot.js",
+      "root_cause": "10 lines replaced/restructured",
+      "fix": "Rewrote 25→42 lines (10 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T11:06:30.848Z"
     }
   ]
 }

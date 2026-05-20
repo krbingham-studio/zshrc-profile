@@ -103,7 +103,7 @@
               <span class="section-label">Plugins</span>
               <span class="section-count">{{ claude.plugins.length }}</span>
             </div>
-            <div class="two-col-grid">
+            <div class="four-col-grid">
               <PluginCard v-for="p in claude.plugins" :key="p.name" :plugin="p" />
             </div>
           </div>
@@ -114,7 +114,7 @@
               <span class="section-label">Skills</span>
               <span class="section-count">{{ claude.skills.length }}</span>
             </div>
-            <div class="two-col-grid" v-if="claude.skills.length">
+            <div class="four-col-grid" v-if="claude.skills.length">
               <SkillCard v-for="s in claude.skills" :key="s.name" :skill="s" />
             </div>
             <div v-else class="empty">No skills configured</div>
@@ -126,7 +126,7 @@
               <span class="section-label">Agents</span>
               <span class="section-count">{{ claude.agents.length }}</span>
             </div>
-            <div class="two-col-grid">
+            <div class="four-col-grid">
               <AgentCard v-for="a in claude.agents" :key="a.name" :agent="a" />
             </div>
             <div v-if="!claude.agents.length" class="empty">No agents configured</div>
@@ -169,7 +169,7 @@
               <span class="section-label">Plugins</span>
               <span class="section-count">{{ copilot.plugins.length }}</span>
             </div>
-            <div class="two-col-grid" v-if="copilot.plugins.length">
+            <div class="four-col-grid" v-if="copilot.plugins.length">
               <PluginCard v-for="p in copilot.plugins" :key="p.name" :plugin="p" />
             </div>
             <div v-else class="empty">No plugins installed</div>
@@ -193,7 +193,7 @@
               <span class="section-label">Skills</span>
               <span class="section-count">{{ copilot.skills.length }}</span>
             </div>
-            <div class="two-col-grid" v-if="copilot.skills.length">
+            <div class="four-col-grid" v-if="copilot.skills.length">
               <SkillCard v-for="s in copilot.skills" :key="s.name" :skill="s" />
             </div>
             <div v-else class="empty">No skills configured</div>
@@ -205,7 +205,7 @@
               <span class="section-label">Agents</span>
               <span class="section-count">{{ copilot.agents.length }}</span>
             </div>
-            <div class="two-col-grid" v-if="copilot.agents.length">
+            <div class="four-col-grid" v-if="copilot.agents.length">
               <AgentCard v-for="a in copilot.agents" :key="a.name" :agent="a" />
             </div>
             <div v-else class="empty">No agents configured</div>
@@ -775,6 +775,7 @@ button { font: inherit; cursor: pointer; }
 /* Grids */
 .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap: var(--dash-card-gap, 8px); }
 .two-col-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--dash-card-gap, 8px); }
+.four-col-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--dash-card-gap, 8px); }
 
 /* Shared card atoms (for inline cards in tabs) */
 .card {
