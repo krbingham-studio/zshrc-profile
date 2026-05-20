@@ -371,6 +371,54 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-20T10:58:42.653Z"
+    },
+    {
+      "id": "bug-024",
+      "timestamp": "2026-05-20T11:01:48.001Z",
+      "error_message": "Null/undefined access in ",
+      "file": "dashboard/server/readers/github-copilot.js",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T11:01:48.001Z"
+    },
+    {
+      "id": "bug-025",
+      "timestamp": "2026-05-20T11:02:02.711Z",
+      "error_message": "Wrong reference: readDirNames should be readSkills",
+      "file": "dashboard/server/readers/github-copilot.js",
+      "root_cause": "Used \"readDirNames\" instead of \"readSkills\"",
+      "fix": "Changed readDirNames → readSkills",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T11:02:02.711Z"
+    },
+    {
+      "id": "bug-026",
+      "timestamp": "2026-05-20T11:02:07.734Z",
+      "error_message": "Incorrect value in code",
+      "file": "dashboard/src/App.vue",
+      "root_cause": "Had \" :skill=\"",
+      "fix": "Changed to \"s.name\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "vue"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T11:02:07.734Z"
     }
   ]
 }

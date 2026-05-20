@@ -84,13 +84,57 @@ function readExtensions() {
   return results.sort((a, b) => b.version.localeCompare(a.version, undefined, { numeric: true }))
 }
 
-function readDirNames(dir) {
+function parseFrontmatter(content) {
+  const match = content.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/)
+  if (!match) return { meta: {}, body: content.trim() }
+  const meta = {}
+  for (const line of match[1].split('\n')) {
+    const colon = line.indexOf(':')
+    if (colon === -1) continue
+    meta[line.slice(0, colon).trim()] = line.slice(colon + 1).trim()
+  }
+  return { meta, body: match[2].trim() }
+}
+
+function readSkillsFromDir(dir) {
   if (!existsSync(dir)) return []
   try {
-    return readdirSync(dir).filter(f => !f.startsWith('.'))
+    return readdirSync(dir)
+      .filter(f => !f.startsWith('.'))
+      .map(f => {
+        const skillFile = join(dir, f, 'SKILL.md')
+        if (!existsSync(skillFile)) return { name: f, description: null, body: null }
+        const raw = readFileSync(skillFile, 'utf8')
+        const { meta, body } = parseFrontmatter(raw)
+        return { name: meta.name ?? f, description: meta.description ?? null, body }
+      })
   } catch {
     return []
   }
+}
+
+function readSkills() {
+  const seen = new Set()
+  const skills = []
+
+  const add = s => { if (!seen.has(s.name)) { seen.add(s.name); skills.push(s) } }
+
+  // Personal skills
+  for (const s of readSkillsFromDir(join(COPILOT_HOME, 'skills'))) add(s)
+  for (const s of readSkillsFromDir(join(HOME, '.agents', 'skills'))) add(s)
+
+  // Project-level skills (.github/skills/ and .agents/skills/ per repo)
+  for (const root of GIT_ROOTS) {
+    try {
+      for (const repo of readdirSync(root)) {
+        for (const subdir of ['.github', '.agents']) {
+          for (const s of readSkillsFromDir(join(root, repo, subdir, 'skills'))) add(s)
+        }
+      }
+    } catch { /* skip */ }
+  }
+
+  return skills
 }
 
 function readAgents() {
@@ -174,7 +218,7 @@ export function getGithubCopilotData() {
     account: readAccount(),
     mcpServers,
     extensions,
-    skills: readDirNames(join(COPILOT_HOME, 'skills')),
+    skills: readSkills(),
     agents: readAgents(),
     plugins: readPlugins(),
     instructions: readInstructions(),

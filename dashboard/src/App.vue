@@ -194,7 +194,7 @@
               <span class="section-count">{{ copilot.skills.length }}</span>
             </div>
             <div class="two-col-grid" v-if="copilot.skills.length">
-              <SkillCard v-for="s in copilot.skills" :key="s" :skill="{ name: s, description: null, body: null }" />
+              <SkillCard v-for="s in copilot.skills" :key="s.name" :skill="s" />
             </div>
             <div v-else class="empty">No skills configured</div>
           </div>
