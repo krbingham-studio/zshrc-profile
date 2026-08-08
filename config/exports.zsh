@@ -21,11 +21,6 @@ export PATH="$PATH:$HOME/.dotnet/tools"
 export DOCKER_CLIENT_TIMEOUT=120
 export COMPOSE_HTTP_TIMEOUT=120
 
-# NVM
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # Load nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # Load nvm bash_completion
-
 # Quidco CLI
 
 # Path additions
@@ -82,27 +77,6 @@ fi
 # Zoxide (smart cd replacement)
 if command -v zoxide > /dev/null 2>&1; then
   eval "$(zoxide init zsh)"
-fi
-
-# NVM auto-switch based on .nvmrc
-if [[ -d "$NVM_DIR" ]]; then
-  autoload -U add-zsh-hook
-  load-nvmrc() {
-    local nvmrc_path="$(nvm_find_nvmrc)"
-    if [[ -n "$nvmrc_path" ]]; then
-      local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-      if [[ "$nvmrc_node_version" == "N/A" ]]; then
-        nvm install
-      elif [[ "$nvmrc_node_version" != "$(nvm version)" ]]; then
-        nvm use --silent
-      fi
-    elif [[ -n "$(PWD=$OLDPWD nvm_find_nvmrc)" ]] && [[ "$(nvm version)" != "$(nvm version default)" ]]; then
-      echo "Reverting to nvm default version"
-      nvm use default --silent
-    fi
-  }
-  add-zsh-hook chpwd load-nvmrc
-  load-nvmrc
 fi
 
 # FZF configuration
