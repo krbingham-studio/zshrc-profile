@@ -459,7 +459,7 @@ repo() {
     [[ -n "$target" ]] && cd "$git_home/$target" || return 1
   else
     if [[ -z "$1" ]]; then
-      echo "$repos" | sed "s|$git_home/||"
+      echo "${repos//$git_home\//}"
       return 0
     fi
     local target
