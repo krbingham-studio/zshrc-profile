@@ -23,3 +23,8 @@ elif command -v xsel > /dev/null 2>&1; then
 fi
 
 export PATH="$HOME/.local/bin:$PATH"
+
+# mise (runtime version manager)
+if command -v mise > /dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+fi
