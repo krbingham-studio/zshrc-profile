@@ -11,6 +11,17 @@ else
     export IS_LINUX="true"
 fi
 
+# Detect WSL2 vs native Linux (WSL kernels carry "microsoft" in the version string)
+if [[ "$IS_LINUX" == "true" ]]; then
+    if [[ -n "$WSL_DISTRO_NAME" ]] || [[ -n "$WSL_INTEROP" ]] || \grep -qi microsoft /proc/version 2> /dev/null; then
+        export IS_WSL="true"
+    else
+        export IS_WSL="false"
+    fi
+else
+    export IS_WSL="false"
+fi
+
 # ============================================
 # Homebrew Initialization
 # ============================================
@@ -210,7 +221,11 @@ update_zshrc_repo
 
 if [[ "$IS_LINUX" == "true" ]]; then
     echo "=========================================="
-    echo " 🚀 Welcome to your WSL2 development environment!"
+    if [[ "$IS_WSL" == "true" ]]; then
+        echo " 🚀 Welcome to your WSL2 development environment!"
+    else
+        echo " 🚀 Welcome to your Linux development environment!"
+    fi
     echo " ⚡ Powered by Starship prompt"
     echo "=========================================="
 else
