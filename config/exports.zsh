@@ -11,7 +11,17 @@ export KUBECONFIG="${HOME}/.kube/config"
 export HOST_FILE=/etc/hosts
 
 # Programming Languages & Tools
-# export JAVA_HOME="$BREW_PREFIX/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"
+if [[ "$IS_LINUX" == "true" ]]; then
+  export JAVA_HOME="/home/linuxbrew/.linuxbrew/opt/openjdk@17"
+  export PATH="$JAVA_HOME/bin:$PATH"
+elif [[ "$IS_MAC" == "true" ]]; then
+  export JAVA_HOME="$BREW_PREFIX/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"
+fi
+
+# Flutter (Linux)
+if [[ "$IS_LINUX" == "true" ]]; then
+  export PATH="$PATH:$HOME/development/flutter/bin"
+fi
 
 # .NET
 export PATH="$BREW_PREFIX/opt/dotnet@8/bin:$PATH"
@@ -38,11 +48,15 @@ export PATH
 if [[ "$IS_LINUX" == "true" ]]; then
   if [[ -d "$HOME/Android/Sdk" ]]; then
     export ANDROID_HOME=$HOME/Android/Sdk
+    export ANDROID_SDK_ROOT="$ANDROID_HOME"
     if [[ ":$PATH:" != *":$ANDROID_HOME/cmdline-tools/latest/bin:"* ]]; then
       export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
     fi
     if [[ ":$PATH:" != *":$ANDROID_HOME/platform-tools:"* ]]; then
       export PATH=$PATH:$ANDROID_HOME/platform-tools
+    fi
+    if [[ ":$PATH:" != *":$ANDROID_HOME/emulator:"* ]]; then
+      export PATH=$PATH:$ANDROID_HOME/emulator
     fi
   fi
 elif [[ "$IS_MAC" == "true" ]]; then
