@@ -55,7 +55,7 @@
 ## config/
 
 - `aliases.zsh` — Aliases + ai-sync shortcuts (aisync/aisynca/ccsync/ghsync) (~1720 tok)
-- `exports.zsh` — Environment Variables, Path Config, FORGEHELM_API_URL/TOKEN (~1200 tok)
+- `exports.zsh` — Environment Variables, Path Config, FORGEHELM_API_URL/TOKEN, OS-specific JAVA_HOME/ANDROID_HOME/Flutter (~1350 tok)
 - `functions.zsh` — ============================================ (~5285 tok)
 - `git.zsh` — Git-Specific Functions & Aliases (~1596 tok)
 - `linux.zsh` — Linux-specific configuration (~209 tok)

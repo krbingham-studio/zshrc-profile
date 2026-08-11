@@ -187,3 +187,6 @@
 | 12:04 | Session end: 42 writes across 9 files (functions.zsh, github-copilot.js, App.vue, index.js, package.json) | 10 reads | ~30299 tok |
 | 12:06 | Edited dashboard/server/readers/github-copilot.js | added 2 condition(s) | ~409 |
 | 12:06 | Session end: 43 writes across 9 files (functions.zsh, github-copilot.js, App.vue, index.js, package.json) | 10 reads | ~30699 tok |
+| 12:48 | Added Android SDK/Java/Flutter exports for Linux | config/linux.zsh | success | ~150 |
+| 12:49 | Reverted duplicate Android/Java/Flutter exports from linux.zsh, merged into existing OS-guarded block in exports.zsh instead | config/linux.zsh, config/exports.zsh | success | ~200 |
+| 12:55 | Added IS_WSL detection (checks WSL_DISTRO_NAME/WSL_INTEROP/proc-version) and fixed banner to say Linux vs WSL2 correctly | .zshrc | success | ~150 |
