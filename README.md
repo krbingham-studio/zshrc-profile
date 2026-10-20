@@ -1,3 +1,5 @@
+> **Moved to GitLab:** https://gitlab.com/krbingham-studio/infrastructure/zshrc-profile — this GitHub repository is archived and no longer updated.
+
 # 🚀 ZSH Configuration Profile
 
 A portable, modular ZSH configuration that works seamlessly across macOS and Linux (WSL2). Keep your shell configuration in sync across all your development machines with version control.
